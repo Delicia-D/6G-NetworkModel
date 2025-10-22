@@ -1,0 +1,356 @@
+[
+  {
+    "config_name": "Group_A_100%",
+    "group_config": {
+      "Group A": 1.0
+    },
+    "arrival_rate_per_second": 0.3,
+    "arrival_rate_per_hour": 1080.0,
+    "predictive_blocking_prob": 0.06444081251459258,
+    "nonpredictive_blocking_prob": 0.06560821853840766,
+    "total_calls": 4283,
+    "predictive_admitted": 4007,
+    "nonpredictive_admitted": 4002,
+    "predictive_handoffs": 567,
+    "nonpredictive_handoffs": 1359,
+    "predictive_calls_admitted_to_satellite": 1514,
+    "nonpredictive_calls_admitted_to_satellite": 1937,
+    "predictive_handoff_prob": 0.37450462351387054,
+    "nonpredictive_handoff_prob_": 0.701600413009809,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 276
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group A - no RATs available": 281
+    }
+  },
+  {
+    "config_name": "Group_A_100%",
+    "group_config": {
+      "Group A": 1.0
+    },
+    "arrival_rate_per_second": 1,
+    "arrival_rate_per_hour": 3600,
+    "predictive_blocking_prob": 0.3673540476522224,
+    "nonpredictive_blocking_prob": 0.35669499790999026,
+    "total_calls": 14354,
+    "predictive_admitted": 9081,
+    "nonpredictive_admitted": 9234,
+    "predictive_handoffs": 1982,
+    "nonpredictive_handoffs": 3045,
+    "predictive_calls_admitted_to_satellite": 4164,
+    "nonpredictive_calls_admitted_to_satellite": 4437,
+    "predictive_handoff_prob": 0.4759846301633045,
+    "nonpredictive_handoff_prob_": 0.6862745098039216,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 5273
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group A - no RATs available": 5120
+    }
+  },
+  {
+    "config_name": "Group_A_100%",
+    "group_config": {
+      "Group A": 1.0
+    },
+    "arrival_rate_per_second": 2,
+    "arrival_rate_per_hour": 7200,
+    "predictive_blocking_prob": 0.5671594841145015,
+    "nonpredictive_blocking_prob": 0.5571633287896264,
+    "total_calls": 28611,
+    "predictive_admitted": 12384,
+    "nonpredictive_admitted": 12670,
+    "predictive_handoffs": 3828,
+    "nonpredictive_handoffs": 4296,
+    "predictive_calls_admitted_to_satellite": 6725,
+    "nonpredictive_calls_admitted_to_satellite": 6364,
+    "predictive_handoff_prob": 0.5692193308550186,
+    "nonpredictive_handoff_prob_": 0.6750471401634193,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 16227
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group A - no RATs available": 15941
+    }
+  },
+  {
+    "config_name": "Group_A_100%",
+    "group_config": {
+      "Group A": 1.0
+    },
+    "arrival_rate_per_second": 3,
+    "arrival_rate_per_hour": 10800,
+    "predictive_blocking_prob": 0.7004079551249363,
+    "nonpredictive_blocking_prob": 0.7014742014742015,
+    "total_calls": 43142,
+    "predictive_admitted": 12925,
+    "nonpredictive_admitted": 12879,
+    "predictive_handoffs": 4365,
+    "nonpredictive_handoffs": 4406,
+    "predictive_calls_admitted_to_satellite": 7157,
+    "nonpredictive_calls_admitted_to_satellite": 6497,
+    "predictive_handoff_prob": 0.609892413022216,
+    "nonpredictive_handoff_prob_": 0.6781591503770972,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 30217
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group A - no RATs available": 30263
+    }
+  },
+  {
+    "config_name": "Group_A_100%",
+    "group_config": {
+      "Group A": 1.0
+    },
+    "arrival_rate_per_second": 4,
+    "arrival_rate_per_hour": 14400,
+    "predictive_blocking_prob": 0.7731824345467821,
+    "nonpredictive_blocking_prob": 0.7739473592712354,
+    "total_calls": 57522,
+    "predictive_admitted": 13047,
+    "nonpredictive_admitted": 13003,
+    "predictive_handoffs": 4444,
+    "nonpredictive_handoffs": 4390,
+    "predictive_calls_admitted_to_satellite": 7187,
+    "nonpredictive_calls_admitted_to_satellite": 6585,
+    "predictive_handoff_prob": 0.618338667037707,
+    "nonpredictive_handoff_prob_": 0.6666666666666666,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 44475
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group A - no RATs available": 44519
+    }
+  },
+  {
+    "config_name": "Group_A_100%",
+    "group_config": {
+      "Group A": 1.0
+    },
+    "arrival_rate_per_second": 5,
+    "arrival_rate_per_hour": 18000,
+    "predictive_blocking_prob": 0.8171763987566607,
+    "nonpredictive_blocking_prob": 0.8174123001776199,
+    "total_calls": 72064,
+    "predictive_admitted": 13175,
+    "nonpredictive_admitted": 13158,
+    "predictive_handoffs": 4487,
+    "nonpredictive_handoffs": 4423,
+    "predictive_calls_admitted_to_satellite": 7158,
+    "nonpredictive_calls_admitted_to_satellite": 6634,
+    "predictive_handoff_prob": 0.6268510757194747,
+    "nonpredictive_handoff_prob_": 0.6667169128730781,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 58889
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group A - no RATs available": 58906
+    }
+  },
+  {
+    "config_name": "Group_A_50%",
+    "group_config": {
+      "Group A": 0.5,
+      "Group B": 0.17,
+      "Group C": 0.17,
+      "Group D": 0.17
+    },
+    "arrival_rate_per_second": 0.3,
+    "arrival_rate_per_hour": 1080.0,
+    "predictive_blocking_prob": 0.007986845196147521,
+    "nonpredictive_blocking_prob": 0.014799154334038054,
+    "total_calls": 4257,
+    "predictive_admitted": 4223,
+    "nonpredictive_admitted": 4194,
+    "predictive_handoffs": 338,
+    "nonpredictive_handoffs": 1357,
+    "predictive_calls_admitted_to_satellite": 1372,
+    "nonpredictive_calls_admitted_to_satellite": 1926,
+    "predictive_handoff_prob": 0.24635568513119532,
+    "nonpredictive_handoff_prob_": 0.7045690550363447,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 18,
+      "Group C - terrestrial unavailable": 8,
+      "Group B - terrestrial unavailable": 6,
+      "Group D - terrestrial unavailable": 2
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group A - no RATs available": 44,
+      "Group C - no RATs available": 12,
+      "Group B - no RATs available": 6,
+      "Group D - no RATs available": 1
+    }
+  },
+  {
+    "config_name": "Group_A_50%",
+    "group_config": {
+      "Group A": 0.5,
+      "Group B": 0.17,
+      "Group C": 0.17,
+      "Group D": 0.17
+    },
+    "arrival_rate_per_second": 1,
+    "arrival_rate_per_hour": 3600,
+    "predictive_blocking_prob": 0.272632093250506,
+    "nonpredictive_blocking_prob": 0.2701193550638654,
+    "total_calls": 14327,
+    "predictive_admitted": 10421,
+    "nonpredictive_admitted": 10457,
+    "predictive_handoffs": 1283,
+    "nonpredictive_handoffs": 2916,
+    "predictive_calls_admitted_to_satellite": 3724,
+    "nonpredictive_calls_admitted_to_satellite": 4303,
+    "predictive_handoff_prob": 0.3445220193340494,
+    "nonpredictive_handoff_prob_": 0.6776667441320009,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 2086,
+      "Group B - terrestrial unavailable": 563,
+      "Group C - terrestrial unavailable": 751,
+      "Group D - terrestrial unavailable": 506
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group C - no RATs available": 759,
+      "Group A - no RATs available": 2096,
+      "Group B - no RATs available": 559,
+      "Group D - no RATs available": 456
+    }
+  },
+  {
+    "config_name": "Group_A_50%",
+    "group_config": {
+      "Group A": 0.5,
+      "Group B": 0.17,
+      "Group C": 0.17,
+      "Group D": 0.17
+    },
+    "arrival_rate_per_second": 2,
+    "arrival_rate_per_hour": 7200,
+    "predictive_blocking_prob": 0.4467839932956212,
+    "nonpredictive_blocking_prob": 0.4393463230672533,
+    "total_calls": 28638,
+    "predictive_admitted": 15843,
+    "nonpredictive_admitted": 16056,
+    "predictive_handoffs": 2986,
+    "nonpredictive_handoffs": 4144,
+    "predictive_calls_admitted_to_satellite": 6613,
+    "nonpredictive_calls_admitted_to_satellite": 6324,
+    "predictive_handoff_prob": 0.4515348555874792,
+    "nonpredictive_handoff_prob_": 0.6552814674256799,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 6758,
+      "Group D - terrestrial unavailable": 1734,
+      "Group B - terrestrial unavailable": 1862,
+      "Group C - terrestrial unavailable": 2441
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group C - no RATs available": 2433,
+      "Group A - no RATs available": 6708,
+      "Group B - no RATs available": 1746,
+      "Group D - no RATs available": 1695
+    }
+  },
+  {
+    "config_name": "Group_A_50%",
+    "group_config": {
+      "Group A": 0.5,
+      "Group B": 0.17,
+      "Group C": 0.17,
+      "Group D": 0.17
+    },
+    "arrival_rate_per_second": 3,
+    "arrival_rate_per_hour": 10800,
+    "predictive_blocking_prob": 0.5765289487167544,
+    "nonpredictive_blocking_prob": 0.5843541851041036,
+    "total_calls": 42938,
+    "predictive_admitted": 18183,
+    "nonpredictive_admitted": 17847,
+    "predictive_handoffs": 4100,
+    "nonpredictive_handoffs": 4425,
+    "predictive_calls_admitted_to_satellite": 7771,
+    "nonpredictive_calls_admitted_to_satellite": 6669,
+    "predictive_handoff_prob": 0.527602625144769,
+    "nonpredictive_handoff_prob_": 0.6635177687809267,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 13109,
+      "Group D - terrestrial unavailable": 3224,
+      "Group B - terrestrial unavailable": 3794,
+      "Group C - terrestrial unavailable": 4628
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group C - no RATs available": 4780,
+      "Group A - no RATs available": 13328,
+      "Group B - no RATs available": 3746,
+      "Group D - no RATs available": 3237
+    }
+  },
+  {
+    "config_name": "Group_A_50%",
+    "group_config": {
+      "Group A": 0.5,
+      "Group B": 0.17,
+      "Group C": 0.17,
+      "Group D": 0.17
+    },
+    "arrival_rate_per_second": 4,
+    "arrival_rate_per_hour": 14400,
+    "predictive_blocking_prob": 0.6764983070962337,
+    "nonpredictive_blocking_prob": 0.6759398233795246,
+    "total_calls": 57298,
+    "predictive_admitted": 18536,
+    "nonpredictive_admitted": 18568,
+    "predictive_handoffs": 4205,
+    "nonpredictive_handoffs": 4452,
+    "predictive_calls_admitted_to_satellite": 7619,
+    "nonpredictive_calls_admitted_to_satellite": 6755,
+    "predictive_handoff_prob": 0.5519096994356215,
+    "nonpredictive_handoff_prob_": 0.6590673575129534,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 20303,
+      "Group D - terrestrial unavailable": 5366,
+      "Group B - terrestrial unavailable": 5890,
+      "Group C - terrestrial unavailable": 7203
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group C - no RATs available": 7278,
+      "Group A - no RATs available": 20339,
+      "Group B - no RATs available": 5932,
+      "Group D - no RATs available": 5181
+    }
+  },
+  {
+    "config_name": "Group_A_50%",
+    "group_config": {
+      "Group A": 0.5,
+      "Group B": 0.17,
+      "Group C": 0.17,
+      "Group D": 0.17
+    },
+    "arrival_rate_per_second": 5,
+    "arrival_rate_per_hour": 18000,
+    "predictive_blocking_prob": 0.7424826199849234,
+    "nonpredictive_blocking_prob": 0.7433481307758886,
+    "total_calls": 71634,
+    "predictive_admitted": 18447,
+    "nonpredictive_admitted": 18385,
+    "predictive_handoffs": 4289,
+    "nonpredictive_handoffs": 4415,
+    "predictive_calls_admitted_to_satellite": 7481,
+    "nonpredictive_calls_admitted_to_satellite": 6720,
+    "predictive_handoff_prob": 0.5733190749899746,
+    "nonpredictive_handoff_prob_": 0.6569940476190477,
+    "predictive_blocking_reasons": {
+      "Group A - terrestrial unavailable": 27566,
+      "Group D - terrestrial unavailable": 7549,
+      "Group B - terrestrial unavailable": 8344,
+      "Group C - terrestrial unavailable": 9728
+    },
+    "nonpredictive_blocking_reasons": {
+      "Group C - no RATs available": 9817,
+      "Group A - no RATs available": 27630,
+      "Group B - no RATs available": 8300,
+      "Group D - no RATs available": 7502
+    }
+  }
+]
