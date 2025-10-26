@@ -29,7 +29,7 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         # Create and run dual simulator
         sim = DualCallSimulator(
             users=users,
-            start_dt=datetime(2025, 8, 11, 19, 0, 0),
+            start_dt=datetime(2025, 8, 11, 0, 0, 0),
             end_dt=datetime(2025, 8, 11, 23, 30, 0),
             coverage_classifier=classifier,
             arrival_rate_per_second=arrival_rate,
@@ -192,14 +192,14 @@ if __name__ == "__main__":
 
     # Create and save DataFrame
     df = pd.DataFrame(rows)
-    df.to_csv("gamma_relationship_call_data.csv", index=False)
+    df.to_csv("data.csv", index=False)
 
     print(f"\n GAMMA-RELATIONSHIP DATA GENERATED!")
     print(f"Total calls: {len(df):,}")
     
     # Load data and train predictor
     predictor = CallDurationPredictor()
-    df = pd.read_csv('gamma_relationship_call_data.csv')
+    df = pd.read_csv('data.csv')
     
     # STEP 1: TRAIN THE MODEL (separate from evaluation)
     predictor.train(df, verbose=True)
@@ -237,7 +237,7 @@ if __name__ == "__main__":
     results = run_parallel_arrival_rate_experiment(users, predictor, _rng, group_configs)
     
     # Save results for Jupyter plotting
-    with open('arrival_rate_results_multiple_groupsvary.pkl', 'wb') as f:
+    with open('arrival_rate_results_multiple_groupsvary1.pkl', 'wb') as f:
         pickle.dump(results, f)
     
     # Print final summary

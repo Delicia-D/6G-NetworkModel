@@ -28,7 +28,7 @@ def run_single_height_simulation(arrival_rate, height, sim_id, total_sims, users
         # Create and run dual simulator with specific height
         sim = DualCallSimulator(
             users=users,
-            start_dt=datetime(2025, 8, 9, 20, 0, 0),
+            start_dt=datetime(2025, 8, 9, 9, 0, 0),
             end_dt=datetime(2025, 8, 9, 22, 45, 0),
             coverage_classifier=classifier,
             arrival_rate_per_second=arrival_rate,
@@ -138,7 +138,7 @@ def save_raw_results(results):
     """Simply save the raw results without any calculations"""
     
     # Save detailed results
-    with open('satellite_height_results.pkl', 'wb') as f:
+    with open('satellite_height_results2.pkl', 'wb') as f:
         pickle.dump(results, f)
     
     return df

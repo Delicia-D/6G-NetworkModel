@@ -137,7 +137,11 @@ class CallDurationPredictor:
             print(" Model trained successfully!")
         
         return self
-    
+    def calculate_mape(self, y_true, y_pred):
+        """Calculate Mean Absolute Percentage Error (MAPE)"""
+        # Avoid division by zero by adding small epsilon
+        epsilon = 1e-10
+        return np.mean(np.abs((y_true - y_pred) / (y_true + epsilon))) * 100
     def evaluate(self, verbose=True):
         """Evaluate model performance on training and test sets"""
         if self.model is None:
@@ -147,19 +151,19 @@ class CallDurationPredictor:
         y_train_pred = self.model.predict(self.X_train_scaled)
         y_test_pred = self.model.predict(self.X_test_scaled)
         
-        # Calculate comprehensive metrics
+        # Calculate comprehensive metrics including MAPE
         self.train_metrics = {
             'r2': r2_score(self.y_train, y_train_pred),
             'rmse': np.sqrt(mean_squared_error(self.y_train, y_train_pred)),
             'mae': mean_absolute_error(self.y_train, y_train_pred),
-            'mse': mean_squared_error(self.y_train, y_train_pred)
+            'mape': self.calculate_mape(self.y_train, y_train_pred)  # Add MAPE
         }
         
         self.test_metrics = {
             'r2': r2_score(self.y_test, y_test_pred),
             'rmse': np.sqrt(mean_squared_error(self.y_test, y_test_pred)),
             'mae': mean_absolute_error(self.y_test, y_test_pred),
-            'mse': mean_squared_error(self.y_test, y_test_pred)
+            'mape': self.calculate_mape(self.y_test, y_test_pred)  # Add MAPE
         }
         
         if verbose:
@@ -177,21 +181,25 @@ class CallDurationPredictor:
         print(f"   R² Score:    {self.train_metrics['r2']:.4f} ({self.train_metrics['r2']*100:.1f}%)")
         print(f"   RMSE:        {self.train_metrics['rmse']:.2f}s ({self.train_metrics['rmse']/60:.1f}min)")
         print(f"   MAE:         {self.train_metrics['mae']:.2f}s ({self.train_metrics['mae']/60:.1f}min)")
-        print(f"   MSE:         {self.train_metrics['mse']:.2f}")
-        
+        print(f"   MAPE:        {self.train_metrics['mape']:.2f}%")          
         print(f"\nTESTING PERFORMANCE:")
         print(f"   R² Score:    {self.test_metrics['r2']:.4f} ({self.test_metrics['r2']*100:.1f}%)")
         print(f"   RMSE:        {self.test_metrics['rmse']:.2f}s ({self.test_metrics['rmse']/60:.1f}min)")
         print(f"   MAE:         {self.test_metrics['mae']:.2f}s ({self.test_metrics['mae']/60:.1f}min)")
-        print(f"   MSE:         {self.test_metrics['mse']:.2f}")
+        print(f"   MAPE:        {self.test_metrics['mape']:.2f}%")  
+       
         
         print(f"\n ACCURACY ANALYSIS:")
         residuals = self.y_test - self.model.predict(self.X_test_scaled)
         within_30s = (np.abs(residuals) <= 30).sum() / len(residuals) * 100
         within_60s = (np.abs(residuals) <= 60).sum() / len(residuals) * 100
+        
+        # Add MAPE interpretation
+        
         print(f"   Predictions within 30s: {within_30s:.1f}%")
         print(f"   Predictions within 60s: {within_60s:.1f}%")
-    
+       
+        
      
     def plot_feature_importance(self, top_n=15):
         """Plot feature importance using permutation importance with grouped categorical features"""
@@ -290,17 +298,6 @@ class CallDurationPredictor:
         
         # Create separate figures for each plot
         
-        # Plot 1: Residuals vs Predicted
-        plt.figure(figsize=(10, 6))
-        plt.scatter(y_test_pred, residuals, alpha=0.6, s=10)
-        plt.axhline(y=0, color='r', linestyle='--')
-        plt.xlabel('Predicted Duration (seconds)')
-        plt.ylabel('Residuals (seconds)')
-        plt.title('Residuals vs Predicted Values')
-        plt.grid(True, alpha=0.3)
-        plt.tight_layout()
-        plt.show()
-        
         # Plot 2: Residual distribution with 20-second intervals
         plt.figure(figsize=(10, 6))
         min_residual = residuals.min()
@@ -327,25 +324,24 @@ class CallDurationPredictor:
         
         plt.tight_layout()
         plt.show()
-        '''
-        # Actual vs Predicted
-        axes[1,0].scatter(self.y_test, y_test_pred, alpha=0.6, s=10)
-        axes[1,0].plot([self.y_test.min(), self.y_test.max()], 
-                      [self.y_test.min(), self.y_test.max()], 'r--', lw=2)
-        axes[1,0].set_xlabel('Actual Duration (seconds)')
-        axes[1,0].set_ylabel('Predicted Duration (seconds)')
-        axes[1,0].set_title('Actual vs Predicted')
-        axes[1,0].text(0.05, 0.95, f'R² = {self.test_metrics["r2"]:.4f}', 
-                      transform=axes[1,0].transAxes, bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-        
-        # QQ plot for normality
-        from scipy import stats
-        stats.probplot(residuals, dist="norm", plot=axes[1,1])
-        axes[1,1].set_title('Q-Q Plot (Normality Check)')
-        
+
+        plt.figure(figsize=(8, 6))
+        plt.scatter(self.y_test, y_test_pred, alpha=0.6, s=10)
+        plt.plot(
+            [self.y_test.min(), self.y_test.max()],
+            [self.y_test.min(), self.y_test.max()],
+            'r--', lw=2, label='Ideal Fit'
+        )
+        plt.xlabel('Actual Duration (seconds)')
+        plt.ylabel('Predicted Duration (seconds)')
+        plt.title('Actual vs Predicted Duration')
+        plt.legend()
+
+
+        plt.grid(True, alpha=0.3)
         plt.tight_layout()
         plt.show()
-        '''
+
         
     def plot_training_history(self):
         """Plot neural network training history"""

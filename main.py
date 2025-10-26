@@ -29,8 +29,8 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         # Create and run dual simulator
         sim = DualCallSimulator(
             users=users,
-            start_dt=datetime(2025, 8, 10,20, 0, 0),
-            end_dt=datetime(2025, 8, 10, 22, 45, 0),
+            start_dt=datetime(2025, 8, 9,0, 0, 0),
+            end_dt=datetime(2025, 8, 9, 1, 45, 0),
             coverage_classifier=classifier,
             arrival_rate_per_second=arrival_rate,
             predictor=predictor,
@@ -200,10 +200,10 @@ if __name__ == "__main__":
     results = run_parallel_arrival_rate_experiment(users, predictor, _rng)
     
     # Save results for Jupyter plotting
-    with open('arrival_rate_resultsmain.pkl', 'wb') as f:
+    with open('arrival_rate_resultsmainupdated1.pkl', 'wb') as f:
         pickle.dump(results, f)
     
-    '''with open('arrival_rate_resultsmain.json', 'w') as f:
+    '''with open('arrival_rate_resultsmain1.json', 'w') as f:
         json.dump(results, f, indent=2)'''
     
     # Print final summary

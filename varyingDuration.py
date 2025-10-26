@@ -54,6 +54,26 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         # Calculate simulation duration in hours
         duration_hours = (end_dt - start_dt).total_seconds() / 3600.0
         
+        # Get duration statistics from the simulator
+        alldurations = sim.alldurations
+        
+        # Calculate overall statistics for all calls
+        total_calls = len(alldurations)
+        mean_duration = sum(alldurations) / len(alldurations) if alldurations else 0
+        min_duration = min(alldurations) if alldurations else 0
+        max_duration = max(alldurations) if alldurations else 0
+        std_duration = np.std(alldurations) if alldurations else 0
+        
+        # Calculate quartiles
+        if alldurations:
+            quartiles = np.percentile(alldurations, [25, 50, 75, 90])
+            q25 = quartiles[0]
+            median = quartiles[1]
+            q75 = quartiles[2]
+            q90 = quartiles[3]
+        else:
+            q25 = median = q75 = q90 = 0
+        
         # Store results
         result = {
             'scenario': scenario_name,
@@ -74,13 +94,26 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
             'predictive_handoff_prob': predictive_handoff_prob,
             'nonpredictive_handoff_prob_': nonpredictive_handoff_prob,
             'predictive_blocking_reasons': dict(predictive_metrics.blockedReason),
-            'nonpredictive_blocking_reasons': dict(nonpredictive_metrics.blockedReason)
+            'nonpredictive_blocking_reasons': dict(nonpredictive_metrics.blockedReason),
+            # DURATION STATISTICS WITH QUARTILES
+            'duration_stats': {
+                'total_calls_generated': total_calls,
+                'mean_duration_seconds': mean_duration,
+                'min_duration_seconds': min_duration,
+                'max_duration_seconds': max_duration,
+                'std_duration_seconds': std_duration,
+                'q25_duration_seconds': q25,
+                'median_duration_seconds': median,
+                'q75_duration_seconds': q75,
+                'q90_duration_seconds': q90,
+                'day_type': 'weekend' if start_dt.weekday() >= 5 else 'weekday'
+            }
         }
         
         print(f" COMPLETED: {scenario_name} - {arrival_rate} calls/sec | "
-              f"Duration: {duration_hours:.1f}h | "
               f"Blocking P: {predictive_blocking_prob:.3f}, NP: {nonpredictive_blocking_prob:.3f} | "
-              f"Handoff P: {predictive_handoff_prob:.3f}, NP: {nonpredictive_handoff_prob:.3f}")
+              f"Handoff P: {predictive_handoff_prob:.3f}, NP: {nonpredictive_handoff_prob:.3f} | "
+              f"Mean call: {mean_duration:.1f}s | Median: {median:.1f}s")
         
         return result
         
@@ -97,14 +130,15 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
             'duration_hours': (end_dt - start_dt).total_seconds() / 3600.0,
             'error': str(e),
             'predictive_blocking_prob': 1.0,
-            'nonpredictive_blocking_prob': 1.0
+            'nonpredictive_blocking_prob': 1.0,
+            'duration_stats': {}
         }
 
 def run_parallel_scenario_experiment(users, predictor, base_rng, scenario_name, start_dt, end_dt):
     """Run simulations for a specific scenario in parallel"""
     
     # Define arrival rates to test (calls per second)
-    arrival_rates = [0.5,1,2,3,4,5]
+    arrival_rates = [0.1,0.5,1,2,3,4,5]
     
     # Get number of CPU cores (use all available)
     n_jobs = multiprocessing.cpu_count()
@@ -218,8 +252,8 @@ if __name__ == "__main__":
         },
         {
             'name': 'weekend_evening_long', 
-            'start_dt': datetime(2025, 8, 9, 20, 0, 0),   # Saturday 8:00 PM
-            'end_dt': datetime(2025, 8, 9, 22, 45, 0),    # Saturday 10:45 PM
+            'start_dt': datetime(2025, 8, 9, 12, 0, 0),   # Saturday 12:00 PM
+            'end_dt': datetime(2025, 8, 9, 14, 45, 0),    # Saturday 2:45 PM
         }
     ]
 
@@ -243,10 +277,10 @@ if __name__ == "__main__":
         all_results[scenario['name']] = results
     
     # Save combined results
-    with open('varyingduration.pkl', 'wb') as f:
+    with open('varyingduration2.pkl', 'wb') as f:
         pickle.dump(all_results, f)
     
-    with open('varyingduration.json', 'w') as f:
+    with open('varyingduration2.json', 'w') as f:
         # Convert datetime objects to strings for JSON serialization
         json_results = {}
         for scenario_name, results in all_results.items():
@@ -254,25 +288,44 @@ if __name__ == "__main__":
         json.dump(json_results, f, indent=2, default=str)
     
     # Print final summary
-    print(f"\n{'='*70}")
+    print(f"\n{'='*80}")
     print("FINAL EXPERIMENT SUMMARY - SCENARIO COMPARISON")
-    print(f"{'='*70}")
+    print(f"{'='*80}")
     
     for scenario_name, results in all_results.items():
         print(f"\n{scenario_name.upper()}:")
         for result in results:
             if 'error' not in result:
+                ds = result['duration_stats']
                 print(f"  Rate {result['arrival_rate_per_second']}/s: "
                       f"Blocking P={result['predictive_blocking_prob']:.3f}, "
                       f"NP={result['nonpredictive_blocking_prob']:.3f} | "
                       f"Handoff P={result['predictive_handoff_prob']:.3f}, "
                       f"NP={result['nonpredictive_handoff_prob_']:.3f} | "
-                      f"Calls={result['total_calls']}")
+                      f"Mean={ds['mean_duration_seconds']:.1f}s | "
+                      f"Median={ds['median_duration_seconds']:.1f}s | "
+                      f"Q75={ds['q75_duration_seconds']:.1f}s")
             else:
                 print(f"  Rate {result['arrival_rate_per_second']}/s: ERROR - {result['error']}")
     
-    print(f"\nResults saved to 'varyingduration.pkl' for analysis")
-    print(f"Scenarios compared:")
+    # Scenario comparison summary
+    print(f"\n{'SCENARIO DURATION COMPARISON':<50}")
+    print(f"{'-'*50}")
+    for scenario_name, results in all_results.items():
+        valid_results = [r for r in results if 'error' not in r]
+        if valid_results:
+            avg_mean = np.mean([r['duration_stats']['mean_duration_seconds'] for r in valid_results])
+            avg_median = np.mean([r['duration_stats']['median_duration_seconds'] for r in valid_results])
+            avg_q75 = np.mean([r['duration_stats']['q75_duration_seconds'] for r in valid_results])
+            avg_blocking_p = np.mean([r['predictive_blocking_prob'] for r in valid_results])
+            avg_handoff_p = np.mean([r['predictive_handoff_prob'] for r in valid_results])
+            print(f"{scenario_name:<30}: Mean={avg_mean:.1f}s | Median={avg_median:.1f}s | Q75={avg_q75:.1f}s | "
+                  f"Blocking: {avg_blocking_p:.3f} | Handoff: {avg_handoff_p:.3f}")
+    
+    print(f"\nResults saved to 'varyingduration2.pkl' and 'varyingduration2.json'")
+    print(f"Files contain all probabilities and duration statistics (including quartiles) for both scenarios!")
+    print(f"Scenarios completed:")
     for scenario in scenarios:
         duration = (scenario['end_dt'] - scenario['start_dt']).total_seconds() / 3600
-        print(f"  - {scenario['name']}: {scenario['start_dt'].strftime('%Y-%m-%d %H:%M')} to {scenario['end_dt'].strftime('%Y-%m-%d %H:%M')} ({duration:.1f}h)")
+        day_type = 'weekend' if scenario['start_dt'].weekday() >= 5 else 'weekday'
+        print(f"  - {scenario['name']}: {scenario['start_dt'].strftime('%Y-%m-%d %H:%M')} to {scenario['end_dt'].strftime('%Y-%m-%d %H:%M')} ({duration:.1f}h, {day_type})")

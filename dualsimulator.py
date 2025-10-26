@@ -42,7 +42,7 @@ class DualCallSimulator:
         gamma_shape: float = 0.7,
         gamma_scale: float = 1.2,
         max_relationship_score: float = 2.0,
-      
+        
         pair_variation_range: float = 0.03,
         satelliteHeight:int =1300,
         predictor: Optional[CallDurationPredictor] = None,
@@ -64,6 +64,7 @@ class DualCallSimulator:
         self.classifier = coverage_classifier 
         self.service_type=service_type
         self.satelliteHeight=satelliteHeight 
+        self.alldurations = []
         # Per-pair data (copied from CallSimulator)
         self._pair_rel: Dict[Tuple[int,int], float] = {}
         self._pair_call_count: Dict[Tuple[int,int], int] = {}
@@ -228,7 +229,7 @@ class DualCallSimulator:
         self.nonpredictive_controller = nonpredictive_controller
         
         sat_params = SatelliteParams(H_km=self.satelliteHeight, eps_min_deg=10.0,inc_deg=0)
-        alldurations=[]
+        self.alldurations = []
         
         print("Starting DUAL simulation (Predictive + Non-Predictive)")
         print(f"Start: {self.start_dt}, End: {self.end_dt}")
@@ -257,7 +258,7 @@ class DualCallSimulator:
                         next_call_time, calls_per_second, 
                         predictive_controller, nonpredictive_controller,
                         sat_params, 
-                        predictive_rows, nonpredictive_rows, day_stats,alldurations
+                        predictive_rows, nonpredictive_rows, day_stats,self.alldurations
                     )
                     
                     if call_generated:
@@ -300,7 +301,7 @@ class DualCallSimulator:
         count_6_to_12_min = 0
 
         # Count values in each range
-        for time in alldurations:
+        for time in self.alldurations:
             if 0 <= time <= 60:  # 0 to 1 minute (0-60 seconds)
                 count_0_to_1_min += 1
             elif 61 <= time <= 180:  # 1 to 3 minutes (61-180 seconds)
@@ -372,7 +373,7 @@ class DualCallSimulator:
         self._process_single_dual_call(
             caller_id, callee_id, call_time, ctx,
             predictive_controller, nonpredictive_controller,
-            sat_params, predictive_rows, nonpredictive_rows, day_stats,alldurations
+            sat_params, predictive_rows, nonpredictive_rows, day_stats,self.alldurations
         )
         return True
 
@@ -427,7 +428,7 @@ class DualCallSimulator:
         )
         
         actual_duration = self.add_controlled_noise(deterministic_duration)
-        alldurations.append(actual_duration)
+        self.alldurations.append(actual_duration)
         # Common call context
         common_callCtx = {
             "caller_id": caller_id,
@@ -553,4 +554,5 @@ class DualCallSimulator:
         for group, count in nonpredictive_controller.group_counts.items():
             percentage = (count / nonpredictive_controller.metrics.attempts) * 100
             print(f"  {group}: {count} ({percentage:.1f}%)")
-        
+   
+                
