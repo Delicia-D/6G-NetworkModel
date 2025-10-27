@@ -1,8 +1,18 @@
-This code simulates a network model.
-Tests= To run the main simulation =run 'main.py'
-To run service type test = run 'servicetest.py'
-To run varyduration test= run 'varyingduration.py'
-To run varying height test= run 'varyingheight.py'
-To run different group config run 'varyinggroups'
-to run different prediction accuracy run 'varyingpredictability'
-results in notebook
+## Test Suite
+
+Run each test directly from the repository root.  
+On Windows, file names are case-insensitive; on macOS/Linux they are case-sensitive — use the exact casing shown.
+
+| Script                         | What it tests                                      | Run command                           |
+| ------------------------------ | -------------------------------------------------- | ------------------------------------- |
+| `Testmain.py`                  | End-to-end main simulation (default settings)      | `python Testmain.py`                  |
+| `Testservicetypes.py`          | Voice vs. video RB usage / service mix impact      | `python Testservicetypes.py`          |
+| `TestvaryingDuration.py`       | Effect of different callduration distribution         | `python TestvaryingDuration.py`       |
+| `Testvaryinggroups.py`         | Coverage groups A–D composition                       | `python Testvaryinggroups.py`         |
+| `Testvaryingheight.py`         | Satellite altitude / visibility sensitivity        | `python Testvaryingheight.py`         |
+| `TestVaryingPredictability.py` | Impact of predictor accuracy on CAC decisions      | `python TestVaryingPredictability.py` |
+
+**Quick start (main run):**
+```bash
+python Testmain.py
+
