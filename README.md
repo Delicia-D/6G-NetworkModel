@@ -5,3 +5,4 @@ To run varyduration test= run 'varyingduration.py'
 To run varying height test= run 'varyingheight.py'
 To run different group config run 'varyinggroups'
 to run different prediction accuracy run 'varyingpredictability'
+results in notebook
