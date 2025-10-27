@@ -7,12 +7,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-# =============================
-# User in network
 
 # =============================
 # User in network
 # =============================
+
 class User:
     def __init__(self, userId: int):
         self.userId: int = userId
@@ -25,10 +24,10 @@ class User:
         self.relationships[otherUserId] = float(score)
 
     def getRelationshipScore(self, otherUserId: int) -> float:
-        # Convert from 1-20 scale to 0.1-2.0 scale for calculations
+        
         if otherUserId not in self.relationships:
             return 0.1  # Minimum if no relationship
-        return self.relationships[otherUserId] / 10.0  # Convert 1-20 → 0.1-2.0
+        return self.relationships[otherUserId] / 10.0  
 
     def isContact(self, otherUserId: int) -> bool:
         return otherUserId in self.relationships
@@ -48,7 +47,6 @@ class User:
 # =============================
 # CallGenerator
 # =============================
-# =============================
 
 class CallGenerator:
     serviceTypes = ["voice", "video"]
@@ -60,7 +58,7 @@ class CallGenerator:
         self.calleeId = calleeId
         self.timestamp = timestamp
         self.rng = rng
-        self.service_type = service_type  # ← ADD THIS LINE
+        self.service_type = service_type  
         
         # Validate service_type if provided
         if self.service_type is not None and self.service_type not in self.serviceTypes:
@@ -86,11 +84,10 @@ class CallGenerator:
         return "evening"
 
     def serviceType(self) -> str:
-        # If service_type was specified in constructor, use it consistently
+        
         if self.service_type is not None:
             return self.service_type
         
-        # Otherwise, use realistic distribution: 70% voice, 30% video
         if self.rng.random() < 0.70:
             return "voice"
         else:
@@ -120,7 +117,7 @@ class CallGenerator:
         Generate context dictionary with consistent service type.
         """
         dayIdx, dayName = self.getDayOfWeek()
-        svc = self.serviceType()  # This will use the consistent service type if specified
+        svc = self.serviceType()  
         callerLoc, calleeLoc = self.chooseBothLocations()
         return {
             "caller_id": self.callerId,
@@ -135,18 +132,14 @@ class CallGenerator:
             "caller_location": callerLoc,
             "callee_location": calleeLoc,
         }
+    
 # =============================
- #CallSimulator with Gamma Distribution Relationships
+ #CallSimulator
 # =============================
+
 import math
 import hashlib
 class CallSimulator:
-    """
-    - Gamma distribution for relationships: few close friends, many acquaintances
-    - Deterministic base duration formula
-    - Simple, strong multiplicative effects
-    - Minimal self.rngness, maximum signal
-    """
 
     def __init__(
         self,
@@ -157,10 +150,10 @@ class CallSimulator:
         calls_per_day_mean: int = 120,
         noise_level: float = 0.05,  # Very low noise for high predictability
         strict_relationships: bool = True,
-        gamma_shape: float = 0.7,  # Shape parameter for gamma distribution (creates right-skewed distribution)
-        gamma_scale: float = 1.2,  # Scale parameter for gamma distribution
+        gamma_shape: float = 0.7,   
+        gamma_scale: float = 1.2,  
         max_relationship_score: float = 2.0,  
-        pair_variation_range: float = 0.03   # ±30% variation for same relationship score
+        pair_variation_range: float = 0.03   
     ):
         self.users = users
         self.start_dt = start_dt
@@ -179,7 +172,7 @@ class CallSimulator:
         self._pair_last_ts: Dict[Tuple[int,int], Optional[datetime]] = {}
         self._pair_total_duration: Dict[Tuple[int,int], float] = {}
         self.pair_variation_range = pair_variation_range
-        self._pair_seed: Dict[Tuple[int,int], float] = {}  # NEW: Pair-specific seed
+        self._pair_seed: Dict[Tuple[int,int], float] = {}  
         
     @staticmethod
     def _unordered(u: int, v: int) -> Tuple[int,int]:
@@ -218,9 +211,30 @@ class CallSimulator:
         self._pair_call_count[key] = 0
         self._pair_total_duration[key] = 0.0
         self._pair_last_ts[key] = None
-        self._pair_seed[key] = self._get_pair_seed(u, v)  # NEW: Store pair seed
+        self._pair_seed[key] = self._get_pair_seed(u, v)  
         return True
-    
+    def _compute_base_duration(
+        self,
+        relationship_score: float,
+        call_count: int,
+        pair_total_duration: Optional[float],
+    ) -> Tuple[float, float]:
+        """
+        Returns:
+            base_duration: the base duration after mixing with past average (if any)
+            past_avg_duration: 0.0 if no history, else total / call_count (clamped >= 0)
+        """
+        initial_base = relationship_score * 240.0
+
+        if call_count <= 0:
+            past_avg_duration = 0.0
+            base_duration = initial_base
+        else:
+            total = float(pair_total_duration) if pair_total_duration is not None else 0.0
+            past_avg_duration = max(0.0, total / call_count)
+            base_duration = 0.7 * initial_base + 0.3 * past_avg_duration
+
+        return base_duration, past_avg_duration
     def compute_deterministic_duration(
         self,
         relationship_score: float,
@@ -231,23 +245,16 @@ class CallSimulator:
         is_weekend: bool,
         call_count: int,
         hours_since_last: Optional[float],
-         pair_seed: float  ,# NEW: Pair-specific seed
-        pair_total_duration: float = 0.0  # NEW: match the call site
+         pair_seed: float  ,
+        pair_total_duration: float = 0.0  
        
     )  -> Tuple[float, float]:
         """
-         duration in seconds with gamma-distributed relationships
+         duration in seconds
         """
         
-        # 1. BASE DURATION - now exponential to match gamma distribution pattern
-        # relationship_score follows gamma: most values low, few high
-        # Apply pair-specific variation using the seed
-        base= relationship_score*240 # 300 seconds
-        
-        # 3. SERVICE TYPE
+    
         service_factor = 1.05 if service_type == "video" else 1.0
-        
-        # 4. LOCATION FACTOR
         location_scores = {
             "home": 1.3,
             "campus": 1, 
@@ -260,36 +267,29 @@ class CallSimulator:
         callee_loc_score = location_scores.get(callee_location, 1.0)
         location_factor = (caller_loc_score * callee_loc_score) ** 0.5
             
-        if call_count==0:
-            past_avg_duration=0.
-            base_duration = relationship_score*240 # 300 seconds
-        else:
-            # Calculate the actual observed mean for this pair
-            total = float(pair_total_duration) if pair_total_duration is not None else 0.0
-            past_avg_duration = max(0.0, total / call_count)
-            base_duration = (base*0.7) +(past_avg_duration *0.3)
-            
-        # 5. TIME FACTOR 
+        base_duration, past_avg_duration = self._compute_base_duration(
+            relationship_score=relationship_score,
+            call_count=call_count,
+            pair_total_duration=pair_total_duration,
+        )
+             
     
         if is_weekend:
             # On weekends all hours are good for longer calls
             time_factor = 2 # Uniformly boost duration all day
         
         else:
-            # It's a weekday
             if 9 <= hour < 17:   # Standard Work Hours (9 AM - 5 PM)
                 time_factor = 0.9
             elif 17 <= hour < 23: # Prime After-Work Hours (6 PM - 11 PM)
                 time_factor = 1.3
-            elif 23 <= hour or hour < 9: # Late Night / Early Morning (11 PM - 7 AM)
+            elif 23 <= hour or hour < 9: # Late Night / Early Morning 
                 time_factor = 0.85
-            else: # Catch-all for other hours (5-6 PM, etc.)
+            else: # Catch-all for other hours 
                 time_factor = 1.0    
-        # 6. FREQUENCY FACTOR
+        #exponential decay
         frequency_factor = 0.7 + 0.2 * exp(-call_count / 10.0)
         
-        # 7. RECENCY FACTOR
-     
         duration = (base_duration * relationship_score* service_factor * 
                    location_factor * time_factor * frequency_factor )
         
@@ -335,7 +335,7 @@ class CallSimulator:
                 caller = self.rng.choice(candidates)
                 contacts = caller.getContacts()
                 
-                # Weight by gamma-distributed relationship scores (cubic for strong preference)
+                # Weight by gamma-distributed relationship scores 
                 weights = np.array([caller.getRelationshipScore(c)**2 for c in contacts])
                 weights = weights / weights.sum()
                 
@@ -432,6 +432,4 @@ class CallSimulator:
 
         return rows
 
-# =============================
-# MAIN EXECUTION with Gamma Relationships
-# =============================
+

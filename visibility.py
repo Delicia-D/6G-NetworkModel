@@ -17,9 +17,9 @@ class LEOWindowManager:
         if not self.is_available(ts):
             return 0.0
         phase = (ts - self.start) % self.period
-        return max(0.0, self.T_max - phase)# time left
+        return max(0.0, self.T_max - phase)      # time left
 # =============================
-# Satellite visibility utilities - CORRECTED VERSION
+# Satellite visibility utilities 
 # =============================
 import numpy as np
 from dataclasses import dataclass
@@ -50,20 +50,18 @@ class SatelliteParams:
         self.omega_E_deg_s = omega_E_deg_s
         
         # For equatorial orbit, pole is at (90°, 0°)
-        self.pole_lat_deg = 90.0 - inc_deg  # Corrected pole calculation
+        self.pole_lat_deg = 90.0 - inc_deg 
         self.pole_lon_deg = 0.0  # Reference longitude
 
     def _beta_max_rad(self) -> float:
-        """Compute β_max in radians using the correct geometric relationship."""
+        
         eps = self.eps_min_deg * DEG2RAD
         
-        # From the paper's Equation (1): sin α = (R_E / (R_E + H)) * cos ε
         ratio = self.R_E_km / (self.R_E_km + self.H_km)
         x = ratio * np.cos(eps)
         x = np.clip(x, -1.0, 1.0)
         alpha = np.arcsin(x)  # α in rad
         
-        # From Equation (2): ε + α + β = 90°
         beta_max = (np.pi/2.0) - eps - alpha
         
         return beta_max
@@ -95,15 +93,12 @@ class SatelliteParams:
         beta_max = self._beta_max_rad()
         beta_min = self._beta_min_rad(user_lat_deg, user_lon_deg)
         
-        # For equatorial orbit, we can use simplified calculation
         # The maximum latitude visible is approximately β_max
         max_visible_lat_deg = beta_max * RAD2DEG
         
         if abs(user_lat_deg) > max_visible_lat_deg:
             return 0.0
             
-        # Simplified time calculation for equatorial orbit
-        # Pass time ≈ (orbital_period / 180°) * arccos(cos(β_max) / cos(|lat|))
         cos_bmax = np.cos(beta_max)
         user_lat_rad = abs(user_lat_deg) * DEG2RAD
         cos_lat = np.cos(user_lat_rad)
@@ -113,8 +108,7 @@ class SatelliteParams:
             
         arg = cos_bmax / cos_lat
         arg = np.clip(arg, -1.0, 1.0)
-        
-        # Angular extent of pass
+
         pass_angle_rad = 2.0 * np.arccos(arg)
         
         # Convert to time

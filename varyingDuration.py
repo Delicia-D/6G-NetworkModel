@@ -21,7 +21,6 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         print(f" Time period: {start_dt.strftime('%Y-%m-%d %H:%M')} to {end_dt.strftime('%Y-%m-%d %H:%M')}")
         print(f"{'='*60}")
         
-        # Create new RNG for this process to avoid shared state issues
         _rng = np.random.default_rng(rng_seed)
         
         # Create simulator with current arrival rate
@@ -95,7 +94,7 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
             'nonpredictive_handoff_prob_': nonpredictive_handoff_prob,
             'predictive_blocking_reasons': dict(predictive_metrics.blockedReason),
             'nonpredictive_blocking_reasons': dict(nonpredictive_metrics.blockedReason),
-            # DURATION STATISTICS WITH QUARTILES
+            # Duration statistics with quartiles 
             'duration_stats': {
                 'total_calls_generated': total_calls,
                 'mean_duration_seconds': mean_duration,
@@ -140,7 +139,7 @@ def run_parallel_scenario_experiment(users, predictor, base_rng, scenario_name, 
     # Define arrival rates to test (calls per second)
     arrival_rates = [0.1,0.5,1,2,3,4,5]
     
-    # Get number of CPU cores (use all available)
+    # Get number of CPU cores 
     n_jobs = multiprocessing.cpu_count()
     print(f"\n STARTING {scenario_name.upper()} - MULTI-CORE PARALLEL EXECUTION")
     print(f"   Running {len(arrival_rates)} simulations using {n_jobs} CPU cores")
@@ -225,10 +224,10 @@ if __name__ == "__main__":
     predictor = CallDurationPredictor()
     df = pd.read_csv('data.csv')
     
-    # STEP 1: TRAIN THE MODEL (separate from evaluation)
+    # Train the model 
     predictor.train(df, verbose=True)
 
-    # STEP 2: EVALUATE THE MODEL (separate call)
+    # Evaluate the model 
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
     # Save the trained model
@@ -247,13 +246,13 @@ if __name__ == "__main__":
     scenarios = [
         {
             'name': 'weekday_working_hours_short',
-            'start_dt': datetime(2025, 8, 11, 10, 0, 0),  # Monday 10:00 AM
-            'end_dt': datetime(2025, 8, 11, 12, 45, 0),   # Monday 1:45 PM
+            'start_dt': datetime(2025, 8, 11, 10, 0, 0),  
+            'end_dt': datetime(2025, 8, 11, 12, 45, 0),   
         },
         {
             'name': 'weekend_evening_long', 
-            'start_dt': datetime(2025, 8, 9, 12, 0, 0),   # Saturday 12:00 PM
-            'end_dt': datetime(2025, 8, 9, 14, 45, 0),    # Saturday 2:45 PM
+            'start_dt': datetime(2025, 8, 9, 12, 0, 0),   
+            'end_dt': datetime(2025, 8, 9, 14, 45, 0),    
         }
     ]
 

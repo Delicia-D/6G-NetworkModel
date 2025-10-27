@@ -30,7 +30,7 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         sim = DualCallSimulator(
             users=users,
             start_dt=datetime(2025, 8, 9,0, 0, 0),
-            end_dt=datetime(2025, 8, 9, 1, 45, 0),
+            end_dt=datetime(2025, 8, 10, 23, 30, 0),
             coverage_classifier=classifier,
             arrival_rate_per_second=arrival_rate,
             predictor=predictor,
@@ -90,10 +90,10 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
 def run_parallel_arrival_rate_experiment(users, predictor, base_rng):
     """Run simulations with different arrival rates in parallel using CONSISTENT randomness"""
     
-    # Define arrival rates to test (calls per second)
+    # Define arrival rates to test
     arrival_rates = [0.1,1,2,3,4,5]
     #arrival_rates = [ 6]
-    # Get number of CPU cores (use all available)
+    # Get number of CPU cores 
     n_jobs = multiprocessing.cpu_count()
     print(f"\n STARTING MULTI-CORE PARALLEL EXECUTION")
     print(f"   Running {len(arrival_rates)} simulations using {n_jobs} CPU cores")
@@ -112,7 +112,7 @@ def run_parallel_arrival_rate_experiment(users, predictor, base_rng):
             len(arrival_rates),
             users,
             predictor,
-            base_seed  # ← SAME for all
+            base_seed  
         )
         for i, arrival_rate in enumerate(arrival_rates)
     )
@@ -174,10 +174,10 @@ if __name__ == "__main__":
     predictor = CallDurationPredictor()
     df = pd.read_csv('data.csv')
     
-    # STEP 1: TRAIN THE MODEL (separate from evaluation)
+    # Train the model
     predictor.train(df, verbose=True)
 
-    # STEP 2: EVALUATE THE MODEL (separate call)
+    # Evaluate the model 
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
     # Save the trained model
@@ -192,7 +192,7 @@ if __name__ == "__main__":
     with open('training_metrics1.json', 'w') as f:
         json.dump(metrics, f)
 
-    # NOW run the parallel experiment
+    # run the parallel experiment
     print("\n" + "="*70)
     print("STARTING PARALLEL ARRIVAL RATE EXPERIMENT")
     print("="*70)
@@ -200,7 +200,7 @@ if __name__ == "__main__":
     results = run_parallel_arrival_rate_experiment(users, predictor, _rng)
     
     # Save results for Jupyter plotting
-    with open('arrival_rate_resultsmainupdated1.pkl', 'wb') as f:
+    with open('arrival_rate_resultsmainupdated.pkl', 'wb') as f:
         pickle.dump(results, f)
     
     '''with open('arrival_rate_resultsmain1.json', 'w') as f:

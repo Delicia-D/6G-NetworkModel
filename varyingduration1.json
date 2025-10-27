@@ -1,0 +1,532 @@
+{
+  "weekday_working_hours_short": [
+    {
+      "scenario": "weekday_working_hours_short",
+      "arrival_rate_per_second": 0.1,
+      "arrival_rate_per_hour": 360.0,
+      "start_dt": "2025-08-11T10:00:00",
+      "end_dt": "2025-08-11T12:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.0,
+      "nonpredictive_blocking_prob": 0.0,
+      "total_calls": 805,
+      "predictive_admitted": 805,
+      "nonpredictive_admitted": 805,
+      "predictive_handoffs": 0,
+      "nonpredictive_handoffs": 176,
+      "predictive_calls_admitted_to_satellite": 359,
+      "nonpredictive_calls_admitted_to_satellite": 404,
+      "predictive_handoff_prob": 0.0,
+      "nonpredictive_handoff_prob_": 0.43564356435643564,
+      "predictive_blocking_reasons": {},
+      "nonpredictive_blocking_reasons": {},
+      "duration_stats": {
+        "total_calls_generated": 805,
+        "mean_duration_seconds": 204.77605386792214,
+        "min_duration_seconds": 36.000032338502834,
+        "max_duration_seconds": 717.4749331257208,
+        "std_duration_seconds": 113.7154966120041,
+        "day_type": "weekday"
+      }
+    },
+    {
+      "scenario": "weekday_working_hours_short",
+      "arrival_rate_per_second": 0.5,
+      "arrival_rate_per_hour": 1800.0,
+      "start_dt": "2025-08-11T10:00:00",
+      "end_dt": "2025-08-11T12:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.00393217006635537,
+      "nonpredictive_blocking_prob": 0.004915212582944212,
+      "total_calls": 4069,
+      "predictive_admitted": 4053,
+      "nonpredictive_admitted": 4049,
+      "predictive_handoffs": 64,
+      "nonpredictive_handoffs": 824,
+      "predictive_calls_admitted_to_satellite": 2144,
+      "nonpredictive_calls_admitted_to_satellite": 1880,
+      "predictive_handoff_prob": 0.029850746268656716,
+      "nonpredictive_handoff_prob_": 0.43829787234042555,
+      "predictive_blocking_reasons": {
+        "Group B - terrestrial unavailable": 3,
+        "Group C - terrestrial unavailable": 4,
+        "Group A - terrestrial unavailable": 7,
+        "Group D - terrestrial unavailable": 2
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group B - no RATs available": 4,
+        "Group D - no RATs available": 3,
+        "Group C - no RATs available": 6,
+        "Group A - no RATs available": 7
+      },
+      "duration_stats": {
+        "total_calls_generated": 4069,
+        "mean_duration_seconds": 201.78926067602484,
+        "min_duration_seconds": 35.29379161905507,
+        "max_duration_seconds": 1023.5144660443698,
+        "std_duration_seconds": 122.49389575884919,
+        "day_type": "weekday"
+      }
+    },
+    {
+      "scenario": "weekday_working_hours_short",
+      "arrival_rate_per_second": 1,
+      "arrival_rate_per_hour": 3600,
+      "start_dt": "2025-08-11T10:00:00",
+      "end_dt": "2025-08-11T12:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.1313543599257885,
+      "nonpredictive_blocking_prob": 0.13568336425479283,
+      "total_calls": 8085,
+      "predictive_admitted": 7023,
+      "nonpredictive_admitted": 6988,
+      "predictive_handoffs": 287,
+      "nonpredictive_handoffs": 1265,
+      "predictive_calls_admitted_to_satellite": 3558,
+      "nonpredictive_calls_admitted_to_satellite": 3002,
+      "predictive_handoff_prob": 0.08066329398538505,
+      "nonpredictive_handoff_prob_": 0.4213857428381079,
+      "predictive_blocking_reasons": {
+        "Group A - terrestrial unavailable": 259,
+        "Group C - terrestrial unavailable": 216,
+        "Group D - terrestrial unavailable": 269,
+        "Group B - terrestrial unavailable": 318
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group C - no RATs available": 228,
+        "Group A - no RATs available": 286,
+        "Group D - no RATs available": 254,
+        "Group B - no RATs available": 329
+      },
+      "duration_stats": {
+        "total_calls_generated": 8085,
+        "mean_duration_seconds": 197.24317945822693,
+        "min_duration_seconds": 35.29379161905507,
+        "max_duration_seconds": 1023.5144660443698,
+        "std_duration_seconds": 121.74721724432925,
+        "day_type": "weekday"
+      }
+    },
+    {
+      "scenario": "weekday_working_hours_short",
+      "arrival_rate_per_second": 2,
+      "arrival_rate_per_hour": 7200,
+      "start_dt": "2025-08-11T10:00:00",
+      "end_dt": "2025-08-11T12:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.29559130541569445,
+      "nonpredictive_blocking_prob": 0.29467026894265014,
+      "total_calls": 16286,
+      "predictive_admitted": 11472,
+      "nonpredictive_admitted": 11487,
+      "predictive_handoffs": 644,
+      "nonpredictive_handoffs": 1863,
+      "predictive_calls_admitted_to_satellite": 5651,
+      "nonpredictive_calls_admitted_to_satellite": 4743,
+      "predictive_handoff_prob": 0.11396213059635463,
+      "nonpredictive_handoff_prob_": 0.3927893738140417,
+      "predictive_blocking_reasons": {
+        "Group B - terrestrial unavailable": 1441,
+        "Group D - terrestrial unavailable": 1351,
+        "Group A - terrestrial unavailable": 1159,
+        "Group C - terrestrial unavailable": 863
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group B - no RATs available": 1448,
+        "Group D - no RATs available": 1322,
+        "Group A - no RATs available": 1150,
+        "Group C - no RATs available": 879
+      },
+      "duration_stats": {
+        "total_calls_generated": 16286,
+        "mean_duration_seconds": 194.85003279184647,
+        "min_duration_seconds": 33.89630537173444,
+        "max_duration_seconds": 1094.4258296647085,
+        "std_duration_seconds": 122.62115177251529,
+        "day_type": "weekday"
+      }
+    },
+    {
+      "scenario": "weekday_working_hours_short",
+      "arrival_rate_per_second": 3,
+      "arrival_rate_per_hour": 10800,
+      "start_dt": "2025-08-11T10:00:00",
+      "end_dt": "2025-08-11T12:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.37755395683453236,
+      "nonpredictive_blocking_prob": 0.3795272353545735,
+      "total_calls": 24325,
+      "predictive_admitted": 15141,
+      "nonpredictive_admitted": 15093,
+      "predictive_handoffs": 908,
+      "nonpredictive_handoffs": 2240,
+      "predictive_calls_admitted_to_satellite": 7339,
+      "nonpredictive_calls_admitted_to_satellite": 5900,
+      "predictive_handoff_prob": 0.12372257800790298,
+      "nonpredictive_handoff_prob_": 0.37966101694915255,
+      "predictive_blocking_reasons": {
+        "Group D - terrestrial unavailable": 2558,
+        "Group B - terrestrial unavailable": 2764,
+        "Group C - terrestrial unavailable": 1604,
+        "Group A - terrestrial unavailable": 2258
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group D - no RATs available": 2546,
+        "Group B - no RATs available": 2746,
+        "Group A - no RATs available": 2292,
+        "Group C - no RATs available": 1648
+      },
+      "duration_stats": {
+        "total_calls_generated": 24325,
+        "mean_duration_seconds": 191.71881224427614,
+        "min_duration_seconds": 33.89630537173444,
+        "max_duration_seconds": 1093.2746982064687,
+        "std_duration_seconds": 121.3641528378311,
+        "day_type": "weekday"
+      }
+    },
+    {
+      "scenario": "weekday_working_hours_short",
+      "arrival_rate_per_second": 4,
+      "arrival_rate_per_hour": 14400,
+      "start_dt": "2025-08-11T10:00:00",
+      "end_dt": "2025-08-11T12:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.46247345908853127,
+      "nonpredictive_blocking_prob": 0.47096655075853155,
+      "total_calls": 32497,
+      "predictive_admitted": 17468,
+      "nonpredictive_admitted": 17192,
+      "predictive_handoffs": 1149,
+      "nonpredictive_handoffs": 2394,
+      "predictive_calls_admitted_to_satellite": 8125,
+      "nonpredictive_calls_admitted_to_satellite": 6360,
+      "predictive_handoff_prob": 0.1414153846153846,
+      "nonpredictive_handoff_prob_": 0.37641509433962267,
+      "predictive_blocking_reasons": {
+        "Group A - terrestrial unavailable": 3696,
+        "Group C - terrestrial unavailable": 2563,
+        "Group D - terrestrial unavailable": 4172,
+        "Group B - terrestrial unavailable": 4598
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group C - no RATs available": 2720,
+        "Group B - no RATs available": 4635,
+        "Group D - no RATs available": 4290,
+        "Group A - no RATs available": 3660
+      },
+      "duration_stats": {
+        "total_calls_generated": 32497,
+        "mean_duration_seconds": 190.41086125652194,
+        "min_duration_seconds": 33.89630537173444,
+        "max_duration_seconds": 1114.8355678306418,
+        "std_duration_seconds": 120.40305026538135,
+        "day_type": "weekday"
+      }
+    },
+    {
+      "scenario": "weekday_working_hours_short",
+      "arrival_rate_per_second": 5,
+      "arrival_rate_per_hour": 18000,
+      "start_dt": "2025-08-11T10:00:00",
+      "end_dt": "2025-08-11T12:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.5440747515696841,
+      "nonpredictive_blocking_prob": 0.5455579176348445,
+      "total_calls": 40454,
+      "predictive_admitted": 18444,
+      "nonpredictive_admitted": 18384,
+      "predictive_handoffs": 1407,
+      "nonpredictive_handoffs": 2476,
+      "predictive_calls_admitted_to_satellite": 8274,
+      "nonpredictive_calls_admitted_to_satellite": 6661,
+      "predictive_handoff_prob": 0.1700507614213198,
+      "nonpredictive_handoff_prob_": 0.37171595856478007,
+      "predictive_blocking_reasons": {
+        "Group A - terrestrial unavailable": 5374,
+        "Group C - terrestrial unavailable": 3817,
+        "Group D - terrestrial unavailable": 6158,
+        "Group B - terrestrial unavailable": 6661
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group B - no RATs available": 6673,
+        "Group C - no RATs available": 3866,
+        "Group D - no RATs available": 6173,
+        "Group A - no RATs available": 5358
+      },
+      "duration_stats": {
+        "total_calls_generated": 40454,
+        "mean_duration_seconds": 189.31625543800934,
+        "min_duration_seconds": 33.81468685283395,
+        "max_duration_seconds": 1135.684181145967,
+        "std_duration_seconds": 120.3947280582157,
+        "day_type": "weekday"
+      }
+    }
+  ],
+  "weekend_evening_long": [
+    {
+      "scenario": "weekend_evening_long",
+      "arrival_rate_per_second": 0.1,
+      "arrival_rate_per_hour": 360.0,
+      "start_dt": "2025-08-09T20:00:00",
+      "end_dt": "2025-08-09T22:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.0,
+      "nonpredictive_blocking_prob": 0.0,
+      "total_calls": 805,
+      "predictive_admitted": 805,
+      "nonpredictive_admitted": 805,
+      "predictive_handoffs": 0,
+      "nonpredictive_handoffs": 335,
+      "predictive_calls_admitted_to_satellite": 112,
+      "nonpredictive_calls_admitted_to_satellite": 404,
+      "predictive_handoff_prob": 0.0,
+      "nonpredictive_handoff_prob_": 0.8292079207920792,
+      "predictive_blocking_reasons": {},
+      "nonpredictive_blocking_reasons": {},
+      "duration_stats": {
+        "total_calls_generated": 805,
+        "mean_duration_seconds": 463.82290936410647,
+        "min_duration_seconds": 38.67404994360919,
+        "max_duration_seconds": 2547.9290570542835,
+        "std_duration_seconds": 308.6774473122519,
+        "day_type": "weekend"
+      }
+    },
+    {
+      "scenario": "weekend_evening_long",
+      "arrival_rate_per_second": 0.5,
+      "arrival_rate_per_hour": 1800.0,
+      "start_dt": "2025-08-09T20:00:00",
+      "end_dt": "2025-08-09T22:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.19636274268862128,
+      "nonpredictive_blocking_prob": 0.20004915212582944,
+      "total_calls": 4069,
+      "predictive_admitted": 3270,
+      "nonpredictive_admitted": 3255,
+      "predictive_handoffs": 399,
+      "nonpredictive_handoffs": 1092,
+      "predictive_calls_admitted_to_satellite": 843,
+      "nonpredictive_calls_admitted_to_satellite": 1334,
+      "predictive_handoff_prob": 0.47330960854092524,
+      "nonpredictive_handoff_prob_": 0.8185907046476761,
+      "predictive_blocking_reasons": {
+        "Group A - terrestrial unavailable": 212,
+        "Group C - terrestrial unavailable": 142,
+        "Group D - terrestrial unavailable": 202,
+        "Group B - terrestrial unavailable": 243
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group A - no RATs available": 201,
+        "Group D - no RATs available": 215,
+        "Group C - no RATs available": 151,
+        "Group B - no RATs available": 247
+      },
+      "duration_stats": {
+        "total_calls_generated": 4069,
+        "mean_duration_seconds": 511.9333016433666,
+        "min_duration_seconds": 38.140313590963395,
+        "max_duration_seconds": 3547.0191688778573,
+        "std_duration_seconds": 373.9438128078727,
+        "day_type": "weekend"
+      }
+    },
+    {
+      "scenario": "weekend_evening_long",
+      "arrival_rate_per_second": 1,
+      "arrival_rate_per_hour": 3600,
+      "start_dt": "2025-08-09T20:00:00",
+      "end_dt": "2025-08-09T22:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.3717996289424861,
+      "nonpredictive_blocking_prob": 0.3468150896722325,
+      "total_calls": 8085,
+      "predictive_admitted": 5079,
+      "nonpredictive_admitted": 5281,
+      "predictive_handoffs": 942,
+      "nonpredictive_handoffs": 1702,
+      "predictive_calls_admitted_to_satellite": 1557,
+      "nonpredictive_calls_admitted_to_satellite": 2080,
+      "predictive_handoff_prob": 0.605009633911368,
+      "nonpredictive_handoff_prob_": 0.8182692307692307,
+      "predictive_blocking_reasons": {
+        "Group D - terrestrial unavailable": 821,
+        "Group C - terrestrial unavailable": 512,
+        "Group B - terrestrial unavailable": 916,
+        "Group A - terrestrial unavailable": 757
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group B - no RATs available": 828,
+        "Group C - no RATs available": 497,
+        "Group D - no RATs available": 786,
+        "Group A - no RATs available": 693
+      },
+      "duration_stats": {
+        "total_calls_generated": 8085,
+        "mean_duration_seconds": 531.3904603770877,
+        "min_duration_seconds": 36.08823540219808,
+        "max_duration_seconds": 3566.25038055248,
+        "std_duration_seconds": 399.90931647482734,
+        "day_type": "weekend"
+      }
+    },
+    {
+      "scenario": "weekend_evening_long",
+      "arrival_rate_per_second": 2,
+      "arrival_rate_per_hour": 7200,
+      "start_dt": "2025-08-09T20:00:00",
+      "end_dt": "2025-08-09T22:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.6073314503254329,
+      "nonpredictive_blocking_prob": 0.6072086454623603,
+      "total_calls": 16286,
+      "predictive_admitted": 6395,
+      "nonpredictive_admitted": 6397,
+      "predictive_handoffs": 1813,
+      "nonpredictive_handoffs": 1935,
+      "predictive_calls_admitted_to_satellite": 2485,
+      "nonpredictive_calls_admitted_to_satellite": 2376,
+      "predictive_handoff_prob": 0.7295774647887324,
+      "nonpredictive_handoff_prob_": 0.8143939393939394,
+      "predictive_blocking_reasons": {
+        "Group C - terrestrial unavailable": 1706,
+        "Group D - terrestrial unavailable": 2780,
+        "Group B - terrestrial unavailable": 2985,
+        "Group A - terrestrial unavailable": 2420
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group C - no RATs available": 1724,
+        "Group D - no RATs available": 2770,
+        "Group B - no RATs available": 2971,
+        "Group A - no RATs available": 2424
+      },
+      "duration_stats": {
+        "total_calls_generated": 16286,
+        "mean_duration_seconds": 551.161308975943,
+        "min_duration_seconds": 34.97048352371401,
+        "max_duration_seconds": 5679.1782596447465,
+        "std_duration_seconds": 432.9132880060747,
+        "day_type": "weekend"
+      }
+    },
+    {
+      "scenario": "weekend_evening_long",
+      "arrival_rate_per_second": 3,
+      "arrival_rate_per_hour": 10800,
+      "start_dt": "2025-08-09T20:00:00",
+      "end_dt": "2025-08-09T22:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.7346762589928058,
+      "nonpredictive_blocking_prob": 0.7358273381294964,
+      "total_calls": 24325,
+      "predictive_admitted": 6454,
+      "nonpredictive_admitted": 6426,
+      "predictive_handoffs": 1879,
+      "nonpredictive_handoffs": 1992,
+      "predictive_calls_admitted_to_satellite": 2416,
+      "nonpredictive_calls_admitted_to_satellite": 2436,
+      "predictive_handoff_prob": 0.7777317880794702,
+      "nonpredictive_handoff_prob_": 0.8177339901477833,
+      "predictive_blocking_reasons": {
+        "Group B - terrestrial unavailable": 5403,
+        "Group C - terrestrial unavailable": 2921,
+        "Group D - terrestrial unavailable": 5166,
+        "Group A - terrestrial unavailable": 4381
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group B - no RATs available": 5368,
+        "Group C - no RATs available": 2977,
+        "Group D - no RATs available": 5185,
+        "Group A - no RATs available": 4369
+      },
+      "duration_stats": {
+        "total_calls_generated": 24325,
+        "mean_duration_seconds": 557.177315871961,
+        "min_duration_seconds": 34.223332450461,
+        "max_duration_seconds": 5329.585969111516,
+        "std_duration_seconds": 447.8544024064798,
+        "day_type": "weekend"
+      }
+    },
+    {
+      "scenario": "weekend_evening_long",
+      "arrival_rate_per_second": 4,
+      "arrival_rate_per_hour": 14400,
+      "start_dt": "2025-08-09T20:00:00",
+      "end_dt": "2025-08-09T22:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.8019201772471305,
+      "nonpredictive_blocking_prob": 0.8021048096747392,
+      "total_calls": 32497,
+      "predictive_admitted": 6437,
+      "nonpredictive_admitted": 6431,
+      "predictive_handoffs": 1914,
+      "nonpredictive_handoffs": 1927,
+      "predictive_calls_admitted_to_satellite": 2416,
+      "nonpredictive_calls_admitted_to_satellite": 2352,
+      "predictive_handoff_prob": 0.7922185430463576,
+      "nonpredictive_handoff_prob_": 0.8193027210884354,
+      "predictive_blocking_reasons": {
+        "Group B - terrestrial unavailable": 7783,
+        "Group C - terrestrial unavailable": 4183,
+        "Group D - terrestrial unavailable": 7633,
+        "Group A - terrestrial unavailable": 6461
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group B - no RATs available": 7815,
+        "Group C - no RATs available": 4184,
+        "Group D - no RATs available": 7617,
+        "Group A - no RATs available": 6450
+      },
+      "duration_stats": {
+        "total_calls_generated": 32497,
+        "mean_duration_seconds": 557.7348529353898,
+        "min_duration_seconds": 34.223332450461,
+        "max_duration_seconds": 5246.431571962684,
+        "std_duration_seconds": 440.99171682498826,
+        "day_type": "weekend"
+      }
+    },
+    {
+      "scenario": "weekend_evening_long",
+      "arrival_rate_per_second": 5,
+      "arrival_rate_per_hour": 18000,
+      "start_dt": "2025-08-09T20:00:00",
+      "end_dt": "2025-08-09T22:45:00",
+      "duration_hours": 2.75,
+      "predictive_blocking_prob": 0.8395214317496416,
+      "nonpredictive_blocking_prob": 0.838532654372868,
+      "total_calls": 40454,
+      "predictive_admitted": 6492,
+      "nonpredictive_admitted": 6532,
+      "predictive_handoffs": 1950,
+      "nonpredictive_handoffs": 1968,
+      "predictive_calls_admitted_to_satellite": 2459,
+      "nonpredictive_calls_admitted_to_satellite": 2369,
+      "predictive_handoff_prob": 0.7930052867019114,
+      "nonpredictive_handoff_prob_": 0.8307302659349937,
+      "predictive_blocking_reasons": {
+        "Group B - terrestrial unavailable": 10269,
+        "Group C - terrestrial unavailable": 5376,
+        "Group D - terrestrial unavailable": 9982,
+        "Group A - terrestrial unavailable": 8335
+      },
+      "nonpredictive_blocking_reasons": {
+        "Group B - no RATs available": 10214,
+        "Group C - no RATs available": 5428,
+        "Group D - no RATs available": 9906,
+        "Group A - no RATs available": 8374
+      },
+      "duration_stats": {
+        "total_calls_generated": 40454,
+        "mean_duration_seconds": 560.153154813814,
+        "min_duration_seconds": 34.223332450461,
+        "max_duration_seconds": 5205.480713040252,
+        "std_duration_seconds": 450.59403645785324,
+        "day_type": "weekend"
+      }
+    }
+  ]
+}

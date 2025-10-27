@@ -20,7 +20,6 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         print(f" Simulation {i+1}/{total_rates} [{config_name}]: {arrival_rate} calls/second (PID: {os.getpid()})")
         print(f"{'='*60}")
         
-        # Create new RNG for this process to avoid shared state issues
         _rng = np.random.default_rng(rng_seed)
         
         # Create classifier with current group configuration
@@ -52,7 +51,7 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         
         # Store results
         result = {
-            'config_name': config_name,  # Make sure this is included
+            'config_name': config_name,  
             'group_config': group_config,
             'arrival_rate_per_second': arrival_rate,
             'arrival_rate_per_hour': arrival_rate * 3600,
@@ -81,7 +80,7 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         import traceback
         traceback.print_exc()
         return {
-            'config_name': config_name,  # Add this line to include config_name in error results
+            'config_name': config_name,  
             'group_config': group_config,
             'arrival_rate_per_second': arrival_rate,
             'arrival_rate_per_hour': arrival_rate * 3600,
@@ -104,7 +103,7 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
 def run_parallel_arrival_rate_experiment(users, predictor, base_rng, group_configs):
     """Run simulations with different arrival rates and group configurations in parallel"""
     
-    # Define arrival rates to test (calls per second)
+    # Define arrival rates to test 
     arrival_rates = [0.3,1,2,3,4,5]
     
     # Prepare all combinations of configurations and arrival rates
@@ -117,19 +116,16 @@ def run_parallel_arrival_rate_experiment(users, predictor, base_rng, group_confi
                 'group_config': group_config
             })
     
-    # Get number of CPU cores (use all available)
+    # Get number of CPU cores 
     n_jobs = multiprocessing.cpu_count()
     print(f"\n STARTING MULTI-CORE PARALLEL EXECUTION")
     print(f"   Running {len(all_simulations)} simulations using {n_jobs} CPU cores")
     print(f"   Group configurations: {list(group_configs.keys())}")
     print(f"   Arrival rates: {arrival_rates}")
-    print(f"   Using CONSISTENT random seed across all runs for fair comparison")
     print(f"   Start time: {datetime.now().strftime('%H:%M:%S')}")
     print("=" * 60)
     
     start_time = time.time()
-    
-    # Use the SAME base seed for ALL processes to ensure consistent randomness
     base_seed = 42
     
     all_results = Parallel(n_jobs=n_jobs, verbose=10)(
@@ -172,7 +168,6 @@ if __name__ == "__main__":
                 # Generate normal-distributed relationship score
                 score = _rng.normal(mean_relationship, std_relationship)
                 
-                # Clip to reasonable range (1-20) and round
                 score = np.clip(score, 1, 20)
                 score = round(score)
                 
@@ -201,10 +196,10 @@ if __name__ == "__main__":
     predictor = CallDurationPredictor()
     df = pd.read_csv('gamma_relationship_call_data.csv')
     
-    # STEP 1: TRAIN THE MODEL (separate from evaluation)
+    # Train the model
     predictor.train(df, verbose=True)
 
-    # STEP 2: EVALUATE THE MODEL (separate call)
+    # Evaluate the model 
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
     # Save the trained model
@@ -221,12 +216,12 @@ if __name__ == "__main__":
 
     # Define group configurations to test
     group_configs = {
-        'Group_A_100%': {'Group A': 1.0},      # 100% in Group A
-        #'Group_B_50%': {'Group A': 0.5,'Group B':0.25,'Group C':0.25}     # 50% in Group A, 50% in Group B
+        'Group_A_100%': {'Group A': 1.0},      
+        #'Group_B_50%': {'Group A': 0.5,'Group B':0.25,'Group C':0.25}     
         'Group_A_50%': {'Group A': 0.5,'Group B':0.17,'Group C':0.17,'Group D':0.17}}       
     
 
-    # NOW run the parallel experiment with all configurations
+    # run the parallel experiment with all configurations
     print("\n" + "="*70)
     print("STARTING PARALLEL ARRIVAL RATE EXPERIMENT WITH MULTIPLE GROUP CONFIGURATIONS")
     print("="*70)
@@ -256,7 +251,7 @@ if __name__ == "__main__":
     print("FINAL EXPERIMENT SUMMARY")
     print(f"{'='*70}")
     
-    # Group results by configuration for better readability
+    # Group results by configuration 
     results_by_config = {}
     for result in results:
         config_name = result['config_name']

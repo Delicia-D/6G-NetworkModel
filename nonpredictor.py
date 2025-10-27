@@ -1,5 +1,5 @@
 # =============================
-# Standalone Non-Predictive Admission Controller (FIXED)
+# Standalone Non-Predictive Admission Controller
 # =============================
 
 from collections import Counter
@@ -40,8 +40,6 @@ class NonPredictiveCallAdmissionController:
         # Min-heaps for events
         self._endEvents: List[Tuple[float, str]] = []     # (timestamp, sessionId)
         self._cutoffEvents: List[Tuple[float, str]] = []  # (timestamp, sessionId)
-
-    # ---------- Helpers ----------
 
     @staticmethod
     def _normalizeGroup(group: str) -> Literal["A","B","C","D"]:  # Removed "D"
@@ -92,7 +90,7 @@ class NonPredictiveCallAdmissionController:
         group = self._normalizeGroup(callCtx["user_group"])
         preferred = self._preferredRatForGroup(group)
     
-        # Use ACTUAL duration for resource holding
+        # Use actual duration for resource holding
         endTime = callCtx["timestamp"] + timedelta(seconds=float(callCtx["actual_duration_sec"]))
     
         sess = Session(
@@ -113,7 +111,7 @@ class NonPredictiveCallAdmissionController:
         # Schedule normal end release
         heapq.heappush(self._endEvents, (sess.endTime.timestamp(), sessionId))
     
-        # NON-PREDICTIVE: Schedule cutoff based on VISIBILITY time
+        # Schedule cutoff based on visibility time
         if rat == "RAT-1":
             # Handoff needed when satellite coverage ends
             tCut = callCtx["timestamp"] + timedelta(
@@ -126,7 +124,7 @@ class NonPredictiveCallAdmissionController:
         self.metrics.admitted += 1
         self.metrics.admittedByRAT[rat] += 1
 
-        # NEW: Track voice vs video admissions
+        # Track voice vs video admissions
         service_type = callCtx["service_type"].lower()
         if service_type == "voice":
             self.metrics.voice_calls_admitted += 1
@@ -141,14 +139,14 @@ class NonPredictiveCallAdmissionController:
         if sess is None:
             return
         
-        # Capture session data BEFORE removal
+        # Capture session data before removal
         rat = sess.rat
         rbNeed = sess.rbNeed
         
-        # Remove session from active sessions FIRST
+        # Remove session from active sessions first
         self.activeSessions.pop(sessionId, None)
         
-        # THEN release resources and cleanup events
+        # release resources and cleanup events
         self.pool.release(rat, rbNeed)
         self._cleanupCutoffEvents(sessionId)
 
@@ -156,7 +154,7 @@ class NonPredictiveCallAdmissionController:
         """Non-predictive terrestrial routing - FIXED blocking counting"""
         group = self._normalizeGroup(callCtx["user_group"])
         
-        # Initial RAT-1 attempt for all groups (50% probability)
+        # Initial RAT-1 attempt for all groups 
         if self.rng.random() < 0.5:
             if self._is_satellite_regionally_available(callCtx["timestamp"]) and self.pool.resourcesAvailable("RAT-1", rbNeed):
                 
@@ -179,14 +177,14 @@ class NonPredictiveCallAdmissionController:
                 session_id = self._admitToRat("RAT-4", rbNeed, callCtx)
                 return "Admitted: RAT-4 (shared A/B/C - non-predictive)"
 
-            # Try RAT-1 as final fallback (if not already tried)
+            # Try RAT-1 as final fallback 
             if self._is_satellite_regionally_available(callCtx["timestamp"]) and self.pool.resourcesAvailable("RAT-1", rbNeed):
                 session_id = self._admitToRat("RAT-1", rbNeed, callCtx)
                 if float(callCtx["actual_duration_sec"]) > float(callCtx["visibility_sec"]):
                     self.metrics.handoffs += 1
                 return "Admitted: RAT-1 final fallback (A/B/C - non-predictive)"
 
-            # SINGLE BLOCK COUNT FOR GROUPS A/B/C
+            # single block count for groups A/B/C
             self.metrics.blocked += 1
             self.metrics.blockedReason[f"Group {group} - no RATs available"] += 1
             return f"Blocked: Group {group} - no RATs available"
@@ -201,7 +199,6 @@ class NonPredictiveCallAdmissionController:
         self.metrics.attempts += 1
         rbNeed = self._rbRequired(callCtx["service_type"])
         
-        # NON-PREDICTIVE: Always use terrestrial routing (tries RAT-1 first)
         return self._handleRouting(callCtx, rbNeed)
 
     def releaseDueSessions(self, now: datetime):

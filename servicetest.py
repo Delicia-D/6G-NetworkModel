@@ -26,7 +26,7 @@ def run_single_simulation(arrival_rate, service_type, i, total_runs, users, pred
         # Create simulator with current arrival rate
         classifier = CoverageClassifier(mode="real_simulation", rng=_rng)
 
-        # Create and run dual simulator WITH SERVICE TYPE
+        # Create and run dual simulator with service type
         sim = DualCallSimulator(
             users=users,
             start_dt=datetime(2025, 8,9, 0, 0, 0),
@@ -35,7 +35,7 @@ def run_single_simulation(arrival_rate, service_type, i, total_runs, users, pred
             arrival_rate_per_second=arrival_rate,
             predictor=predictor,
             rng=_rng,
-            service_type=service_type  # ← ADDED: Pass service type
+            service_type=service_type  
         )
         
         # Run simulation
@@ -55,7 +55,7 @@ def run_single_simulation(arrival_rate, service_type, i, total_runs, users, pred
         result = {
             'arrival_rate_per_second': arrival_rate,
             'arrival_rate_per_hour': arrival_rate * 3600,
-            'service_type': service_type or 'mixed',  # ← ADDED: Track service type
+            'service_type': service_type or 'mixed',  
             'predictive_blocking_prob': predictive_blocking_prob,
             'nonpredictive_blocking_prob': nonpredictive_blocking_prob,
             'total_calls': predictive_metrics.attempts,
@@ -92,18 +92,15 @@ def run_single_simulation(arrival_rate, service_type, i, total_runs, users, pred
         }
 
 def run_service_type_different_rates(users, predictor, base_rng):
-    """Run video calls at lower rates (0.1-0.9) and voice calls at higher rates (1-5)"""
     
     # Define different arrival rates for video and voice
     video_arrival_rates = [0.1,0.5,1,2,3,4,5]
     voice_arrival_rates = [0.5,1,2,3,4,5]
                                                                                                                                                                                                                                                                    
-    # Get number of CPU cores (use all available)
+    # Get number of CPU cores 
     n_jobs = multiprocessing.cpu_count()
-    
     all_results = []
     
-    # Run VIDEO-ONLY first (lower arrival rates)
     print(f"\n{'='*70}")
     print("STARTING VIDEO-ONLY EXPERIMENTS (Lower Arrival Rates: 0.1-0.9 calls/sec)")
     print(f"{'='*70}")
@@ -134,7 +131,7 @@ def run_service_type_different_rates(users, predictor, base_rng):
     print(f"   Video time: {video_time:.1f}s")
     print(f"   Tested rates: {video_arrival_rates}")
     
-    # Run VOICE-ONLY next (higher arrival rates)
+    # Run voice-only  
     print(f"\n{'='*70}")
     print("STARTING VOICE-ONLY EXPERIMENTS (Higher Arrival Rates: 1-5 calls/sec)")
     print(f"{'='*70}")
@@ -244,10 +241,10 @@ if __name__ == "__main__":
     predictor = CallDurationPredictor()
     df = pd.read_csv('data.csv')
     
-    # STEP 1: TRAIN THE MODEL (separate from evaluation)
+    # Train the model  
     predictor.train(df, verbose=True)
 
-    # STEP 2: EVALUATE THE MODEL (separate call)
+    # Evaluate the model 
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
     # Save the trained model
@@ -262,21 +259,13 @@ if __name__ == "__main__":
     with open('training_metrics.json', 'w') as f:
         json.dump(metrics, f)
 
-    # NOW run the service type experiments with different arrival rates
+    # run the service type experiments with different arrival rates
     print("\n" + "="*70)
     print("STARTING SERVICE TYPE EXPERIMENTS WITH DIFFERENT ARRIVAL RATES")
     print("VIDEO-ONLY (0.1-0.9 calls/sec) → VOICE-ONLY (1-5 calls/sec)")
     print("="*70)
     
-    # Run video-only first (lower rates), then voice-only (higher rates)
     results = run_service_type_different_rates(users, predictor, _rng)
-    
-    # Optional: Add mixed service type if needed
-    # print("\n" + "="*70)
-    # print("ADDING MIXED SERVICE EXPERIMENTS")
-    # print("="*70)
-    # mixed_results = run_mixed_service_experiment(users, predictor, _rng)
-    # results.extend(mixed_results)
     
     # Save results for Jupyter plotting
     with open('service_type_different_rates_results1.pkl', 'wb') as f:
@@ -299,7 +288,7 @@ if __name__ == "__main__":
                 results_by_service[service] = []
             results_by_service[service].append(result)
     
-    # Print video results (lower rates)
+    # Print video results 
     print(f"\nVIDEO-ONLY (Lower Arrival Rates: 0.1-0.9 calls/sec):")
     print("-" * 60)
     
@@ -314,7 +303,7 @@ if __name__ == "__main__":
     else:
         print(f"  No results for video")
     
-    # Print voice results (higher rates)
+    # Print voice results 
     print(f"\nVOICE-ONLY (Higher Arrival Rates: 1-5 calls/sec):")
     print("-" * 60)
     

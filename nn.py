@@ -151,19 +151,19 @@ class CallDurationPredictor:
         y_train_pred = self.model.predict(self.X_train_scaled)
         y_test_pred = self.model.predict(self.X_test_scaled)
         
-        # Calculate comprehensive metrics including MAPE
+        # Calculate comprehensive metrics 
         self.train_metrics = {
             'r2': r2_score(self.y_train, y_train_pred),
             'rmse': np.sqrt(mean_squared_error(self.y_train, y_train_pred)),
             'mae': mean_absolute_error(self.y_train, y_train_pred),
-            'mape': self.calculate_mape(self.y_train, y_train_pred)  # Add MAPE
+            'mape': self.calculate_mape(self.y_train, y_train_pred)  
         }
         
         self.test_metrics = {
             'r2': r2_score(self.y_test, y_test_pred),
             'rmse': np.sqrt(mean_squared_error(self.y_test, y_test_pred)),
             'mae': mean_absolute_error(self.y_test, y_test_pred),
-            'mape': self.calculate_mape(self.y_test, y_test_pred)  # Add MAPE
+            'mape': self.calculate_mape(self.y_test, y_test_pred)  
         }
         
         if verbose:
@@ -236,7 +236,7 @@ class CallDurationPredictor:
             # Group callee_location features
             elif feature.startswith('callee_location_'):
                 group_name = 'callee_location'
-            # Group day_name features (rename to days_of_week)
+            # Group day_name features 
             elif feature.startswith('day_name_'):
                 group_name = 'days_of_week'
             # Keep numerical features as is
@@ -299,7 +299,7 @@ class CallDurationPredictor:
         # Create separate figures for each plot
         
         # Plot 2: Residual distribution with 20-second intervals
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(8, 6))
         min_residual = residuals.min()
         max_residual = residuals.max()
         bin_edges = np.arange(

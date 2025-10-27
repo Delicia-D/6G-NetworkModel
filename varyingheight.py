@@ -223,7 +223,7 @@ if __name__ == "__main__":
     
     results = run_height_experiment(users, predictor, _rng)
     
-    # Save and display results (no calculations)
+    # Save and display results 
     df_results = save_raw_results(results)
     print_detailed_results(results)
     

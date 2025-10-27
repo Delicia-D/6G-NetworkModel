@@ -65,16 +65,12 @@ class DualCallSimulator:
         self.service_type=service_type
         self.satelliteHeight=satelliteHeight 
         self.alldurations = []
-        # Per-pair data (copied from CallSimulator)
+        # Per-pair data 
         self._pair_rel: Dict[Tuple[int,int], float] = {}
         self._pair_call_count: Dict[Tuple[int,int], int] = {}
         self._pair_last_ts: Dict[Tuple[int,int], Optional[datetime]] = {}
         self._pair_total_duration: Dict[Tuple[int,int], float] = {}
         self._pair_seed: Dict[Tuple[int,int], float] = {}
-
-    # =============================
-    # Copied helper methods from CallSimulator
-    # =============================
 
     @staticmethod
     def _unordered(u: int, v: int) -> Tuple[int,int]:
@@ -121,17 +117,9 @@ class DualCallSimulator:
         pair_total_duration: float = 0.0
     ) -> Tuple[float, float]:
         """Calculate actual call duration using deterministic formula"""
-        # Base duration with pair variation
-       
-        # 1. BASE DURATION - now exponential to match gamma distribution pattern
-        # relationship_score follows gamma: most values low, few high
-        # Apply pair-specific variation using the seed
-        base= relationship_score*240 # 300 seconds
         
-        # 3. SERVICE TYPE
+        base= relationship_score*240 
         service_factor = 1.05 if service_type == "video" else 1.0
-        
-        # 4. LOCATION FACTOR
         location_scores = {
             "home": 1.3,
             "campus": 1, 
@@ -146,33 +134,29 @@ class DualCallSimulator:
             
         if call_count==0:
             past_avg_duration=0.
-            base_duration = relationship_score*240 # 300 seconds
+            base_duration = relationship_score*240 
         else:
             # Calculate the actual observed mean for this pair
             total = float(pair_total_duration) if pair_total_duration is not None else 0.0
             past_avg_duration = max(0.0, total / call_count)
             base_duration = (base*0.7) +(past_avg_duration *0.3)
-            
-        # 5. TIME FACTOR 
+             
     
         if is_weekend :
             # On weekends, all hours are good for longer calls
             time_factor = 2 # Uniformly boost duration all day
         
         else:
-            # It's a weekday
             if 9 <= hour < 17:   # Standard Work Hours (9 AM - 5 PM)
                 time_factor = 0.9
             elif 17 <= hour < 23: # Prime After-Work Hours (6 PM - 11 PM)
                 time_factor = 1.3
-            elif 23 <= hour or hour < 9: # Late Night / Early Morning (11 PM - 7 AM)
+            elif 23 <= hour or hour < 9: # Late Night / Early Morning 
                 time_factor = 0.85
-            else: # Catch-all for other hours (5-6 PM, etc.)
+            else: # Catch-all for other hours 
                 time_factor = 1.0    
-        # 6. FREQUENCY FACTOR
-        frequency_factor = 0.7 + 0.2 * exp(-call_count / 10.0)
         
-        # 7. RECENCY FACTOR
+        frequency_factor = 0.7 + 0.2 * exp(-call_count / 10.0)
      
         duration = (base_duration * relationship_score* service_factor * 
                    location_factor * time_factor * frequency_factor )
@@ -187,17 +171,13 @@ class DualCallSimulator:
         noisy_duration = (duration + 10) * noise_factor
         return max(30, min(noisy_duration, 9000.0))
 
-    # =============================
-    # Main simulation method
-    # =============================
-
     def run(self) -> Tuple[List[dict], List[dict]]:
         """Run both controllers simultaneously, return results for both"""
         predictive_rows = []
         nonpredictive_rows = []
         current_time = self.start_dt
         
-             # Create SEPARATE LEO window managers for each controller
+             # Create separate LEO window managers for each controller
         predictive_leo_window = LEOWindowManager(
             start_ts=current_time.timestamp(),
             T_max_sec=72*60*60,
@@ -210,7 +190,6 @@ class DualCallSimulator:
             gap_sec=0
         )
         
-        # Each controller gets its OWN leo_window
         predictive_controller = PredictiveCallAdmissionController(
             leo_window=predictive_leo_window,  
             ratCapacities=RAT_CAPACITIES.copy(),
@@ -234,7 +213,6 @@ class DualCallSimulator:
         print("Starting DUAL simulation (Predictive + Non-Predictive)")
         print(f"Start: {self.start_dt}, End: {self.end_dt}")
         
-        # TRUE POISSON setup
         print(f"\n{'='*60}")
         print(f"ARRIVAL RATE: {self.arrival_rate_per_second} calls/second")
         print(f"{'='*60}")
@@ -249,11 +227,10 @@ class DualCallSimulator:
         
                 
         while current_time <= self.end_dt:
-    # Release due sessions in BOTH controllers
+    # Release due sessions in both controllers
             
-            # MODIFY THIS: Only generate calls before cutoff
             if current_time <= call_generation_cutoff:
-                while next_call_time <= current_time and next_call_time <= call_generation_cutoff:  # ← CHANGED
+                while next_call_time <= current_time and next_call_time <= call_generation_cutoff:  
                     call_generated = self._generate_and_process_dual_call(
                         next_call_time, calls_per_second, 
                         predictive_controller, nonpredictive_controller,
@@ -267,11 +244,10 @@ class DualCallSimulator:
                     # Schedule next call
                     inter_arrival_time = self.rng.exponential(1.0 / calls_per_second)
                     next_call_time += timedelta(seconds=inter_arrival_time)
-                    #self._print_comparative_results(predictive_controller, nonpredictive_controller, total_calls)
 
             predictive_controller.releaseDueSessions(current_time)
             nonpredictive_controller.releaseDueSessions(current_time)
-            current_time += timedelta(seconds=1)  # ← You have 30-second steps, not 1-second!
+            current_time += timedelta(seconds=1)  
             # Progress reporting
             if current_time.second == 0 and current_time.minute == 0:
                 if current_time.hour == 0:
@@ -291,7 +267,6 @@ class DualCallSimulator:
                           f"Active: P={predictive_active} NP={nonpredictive_active}, "
                           f"Next: {next_call_str}")
         
-        # Simulation complete - print comparative results
         self._print_comparative_results(predictive_controller, nonpredictive_controller, total_calls)
         
         # Initialize counters
@@ -302,13 +277,13 @@ class DualCallSimulator:
 
         # Count values in each range
         for time in self.alldurations:
-            if 0 <= time <= 60:  # 0 to 1 minute (0-60 seconds)
+            if 0 <= time <= 60:  # 0 to 1 minute 
                 count_0_to_1_min += 1
-            elif 61 <= time <= 180:  # 1 to 3 minutes (61-180 seconds)
+            elif 61 <= time <= 180:  # 1 to 3 minutes 
                 count_1_to_3_min += 1
-            elif 181 <= time <= 360:  # 3 to 6 minutes (181-360 seconds)
+            elif 181 <= time <= 360:  # 3 to 6 minutes 
                 count_3_to_6_min += 1
-            elif 361 <= time <= 720:  # 6 to 12 minutes (361-720 seconds)
+            elif 361 <= time <= 720:  # 6 to 12 minutes 
                 count_6_to_12_min += 1
 
         # Print results
@@ -319,7 +294,7 @@ class DualCallSimulator:
         return predictive_rows, nonpredictive_rows
         
     # =============================
-    # Call processing methods (same as before)
+    # Call processing methods 
     # =============================
 
     def _generate_and_process_dual_call(self, call_time, calls_per_second,
@@ -338,12 +313,12 @@ class DualCallSimulator:
         caller = self.rng.choice(candidates)
         caller_id = caller.userId
         
-        # Get all contacts (no availability checks)
+        # Get all contacts 
         contacts = caller.getContacts()
         if not contacts:
             return False
         
-        # Randomly select callee (no relationship preference)
+        # Randomly select callee 
         callee_id = self.rng.choice(contacts)
     
        
@@ -369,7 +344,7 @@ class DualCallSimulator:
             "callee_coverage_group": callee_coverage_group
         })
         
-        # Process through BOTH controllers
+        # Process through both controllers
         self._process_single_dual_call(
             caller_id, callee_id, call_time, ctx,
             predictive_controller, nonpredictive_controller,
@@ -391,7 +366,7 @@ class DualCallSimulator:
         last_ts = self._pair_last_ts.get(key)
         hours_since_last = None if last_ts is None else (call_time - last_ts).total_seconds() / 3600.0
         
-        # Calculate deterministic duration (same for both)
+        # Calculate deterministic duration 
         deterministic_duration, past_avg_duration = self.compute_deterministic_duration(
             relationship_score=self._pair_rel[key],
             service_type=ctx["service_type"],
@@ -405,7 +380,7 @@ class DualCallSimulator:
             pair_seed=self._pair_seed[key]
         )
         
-        # Get neural network prediction (for predictive controller)
+        # Get neural network prediction for predictive controller
         if self.predictor and self.predictor.model is not None:
             predicted = {
                 'relationship_score': self._pair_rel[key],
@@ -421,7 +396,7 @@ class DualCallSimulator:
         else:
             print("failed")
         
-        # Satellite visibility (same for both)
+        # Satellite visibility 
         visibility_sec = sat_params.visibility_time_seconds(
             user_lat_deg=ctx["caller_lat"],
             user_lon_deg=ctx["caller_lon"],
@@ -448,11 +423,6 @@ class DualCallSimulator:
         # Process through NON-PREDICTIVE controller  
         nonpredictive_decision = nonpredictive_controller.handleNewCallRequest(common_callCtx.copy())
 
-
-        
-        # Real-time comparative logging
-        #print(f"  PREDICTIVE: {predictive_decision}")
-        #print(f"  NON-PREDICTIVE: {nonpredictive_decision}")
         
         # Update counters if admitted by either controller
         predictive_admitted = predictive_decision.startswith("Admitted")
@@ -506,7 +476,7 @@ class DualCallSimulator:
         print(f"\n{'RAT UTILIZATION':<25} {'PREDICTIVE':<15} {'NON-PREDICTIVE':<15}")
         print(f"{'-'*55}")
         
-        # ACTUALLY GET THE SNAPSHOTS
+        # Get the snapshots
         predictive_snapshot = predictive_controller.getRATSnapshot()
         nonpredictive_snapshot = nonpredictive_controller.getRATSnapshot()
         

@@ -8,7 +8,7 @@ import uuid
 from visibility import LEOWindowManager
 
 # =============================
-# Constants (updated)
+# Constants 
 # =============================
 #nsn
 RAT_CAPACITIES: Dict[str, int] = {
@@ -27,7 +27,7 @@ RB_PER_SERVICE: Dict[str, int] = {
 HANDOFF_TIME_SEC: int = 30  # Time needed to complete handoff process
 
 # =============================
-# Data structures (updated - removed plannedHandoff)
+# Data structures 
 # =============================
 
 @dataclass
@@ -45,9 +45,9 @@ class Session:
     serviceType: str
     startTime: datetime
     endTime: datetime
-    userGroup: Literal["A","B","C","D"]  # Removed "D"
-    preferredRAT: Optional[str] = None  # A->RAT-5, B->RAT-2, C->RAT-4
-    sharedRAT: str = "RAT-4"            # shared for A/B/C/E
+    userGroup: Literal["A","B","C","D"]  
+    preferredRAT: Optional[str] = None  
+    sharedRAT: str = "RAT-4"            
 
 @dataclass
 class AdmissionMetrics:
@@ -57,20 +57,17 @@ class AdmissionMetrics:
         self.blocked: int = 0
       
         self.calls_admitted_to_satellite: int = 0
-        # NEW HANDOFF METRICS
-        self.handoffs: int = 0  # total attempts (successful + failed)
-
-        # REMOVE field() - just use regular attributes
+        self.handoffs: int = 0  
         self.admittedByRAT: Counter = Counter()
         self.blockedReason: Counter = Counter()
-        # NEW: Track voice and video call admissions
+        # Track voice and video call admissions
         self.voice_calls_admitted: int = 0
         self.video_calls_admitted: int = 0
        
    
 
 # =============================
-# RAT Pool (unchanged)
+# RAT Pool 
 # =============================
 
 class RATPool:
@@ -100,16 +97,11 @@ class RATPool:
 
 
 # =============================
-# Admission Controller (FIXED)
+# Admission Controller 
 # =============================
 
 class PredictiveCallAdmissionController:
-    """
-    Handles admit/block decisions, resource accounting, and events:
-    - End events: release RBs at call completion
-    - LEO cutoff events: attempt handoff before visibility ends
-    """
-
+    
     def __init__(
         self,
         ratCapacities: Dict[str, int] = None,
@@ -130,15 +122,14 @@ class PredictiveCallAdmissionController:
         self.metrics = AdmissionMetrics()
         self.activeSessions: Dict[str, Session] = {}
 
-        # Min-heaps for events (time-ordered)
-        self._endEvents: List[Tuple[float, str]] = []     # (timestamp float, sessionId)
-        self._cutoffEvents: List[Tuple[float, str]] = []  # (timestamp float, sessionId)
+        # Min-heaps for events 
+        self._endEvents: List[Tuple[float, str]] = []     
+        self._cutoffEvents: List[Tuple[float, str]] = []  
         self.group_counts = Counter()
 
-    # ---------- Helpers ----------
 
     @staticmethod
-    def _normalizeGroup(group: str) -> Literal["A","B","C","D"]:  # Removed "D"
+    def _normalizeGroup(group: str) -> Literal["A","B","C","D"]:  
        
         g = str(group).strip().upper()
         if g.startswith("GROUP "):
@@ -153,7 +144,7 @@ class PredictiveCallAdmissionController:
     def _is_satellite_regionally_available(self, timestamp: datetime) -> bool:
         """Check if satellite is available in the region at given time"""
         if self.leo_window is None:
-            return True  # Backward compatibility
+            return True   
         return self.leo_window.is_available(timestamp.timestamp())
 
     def _preferredRatForGroup(self, group: str) -> Optional[str]:
@@ -187,7 +178,6 @@ class PredictiveCallAdmissionController:
         group = self._normalizeGroup(callCtx["user_group"])
         preferred = self._preferredRatForGroup(group)
     
-        # Use ACTUAL duration for resource holding
         endTime = callCtx["timestamp"] + timedelta(seconds=float(callCtx["actual_duration_sec"]))
     
         sess = Session(
@@ -210,7 +200,7 @@ class PredictiveCallAdmissionController:
     
         # Schedule LEO cutoff with handoff time margin
         if rat == "RAT-1":
-            # Schedule handoff attempt BEFORE visibility ends
+            # Schedule handoff attempt before visibility ends
             tCut = callCtx["timestamp"] + timedelta(
                 seconds=max(0.0, float(callCtx["visibility_sec"]) - self.handoffTimeSec)
             )
@@ -221,7 +211,7 @@ class PredictiveCallAdmissionController:
         self.metrics.admitted += 1
         self.metrics.admittedByRAT[rat] += 1
 
-        # NEW: Track voice vs video admissions
+        # Track voice vs video admissions
         service_type = callCtx["service_type"].lower()
         if service_type == "voice":
             self.metrics.voice_calls_admitted += 1
@@ -241,7 +231,6 @@ class PredictiveCallAdmissionController:
         self.activeSessions.pop(sessionId, None)
 
     def _handleTerrestrialRouting(self, callCtx: dict, rbNeed: int) -> str:
-        """Fixed terrestrial routing with consistent blocking counting"""
         group = self._normalizeGroup(callCtx["user_group"])
         # Groups A/B/C routing
         if group in {"A", "B", "C", "D"}:
@@ -264,31 +253,18 @@ class PredictiveCallAdmissionController:
                 self.metrics.handoffs += 1
                 return "Admitted: RAT-1 fallback (A/B/C/D)"
 
-            # SINGLE BLOCK COUNT FOR GROUPS A/B/C
+            # Single block count for groups A/B/C
             self.metrics.blocked += 1
             self.metrics.blockedReason[f"Group {group} - terrestrial unavailable"] += 1
             return f"Blocked: Group {group} - terrestrial unavailable"
 
-        """# This should never be reached due to group normalization
-        self.metrics.blocked += 1
-        self.metrics.blockedReason["Unknown group"] += 1
-        return "Blocked: Unknown user group"""
     def handleNewCallRequest(self, callCtx: dict) -> str:
-        """
-        callCtx must include:
-          - caller_id, callee_id, service_type ("voice"/"video"),
-          - predicted_duration_sec (float),
-          - visibility_sec (float, for RAT-1 at caller location & current pass),
-          - user_group ("A".."E" or "Group A"..),
-          - timestamp (datetime)
-        """
         group = self._normalizeGroup(callCtx["user_group"])
 
         self.group_counts[group] += 1
         self.metrics.attempts += 1
         rbNeed = self._rbRequired(callCtx["service_type"])
        
-        # FIXED:
         if self._is_satellite_regionally_available(callCtx["timestamp"]) and float(callCtx["predicted_duration_sec"]) <= float(callCtx["visibility_sec"]):
             if self.pool.resourcesAvailable("RAT-1", rbNeed):
                 session_id = self._admitToRat("RAT-1", rbNeed, callCtx)
@@ -298,8 +274,8 @@ class PredictiveCallAdmissionController:
         
               # Track handoff need
         return self._handleTerrestrialRouting(callCtx, rbNeed)
+    
     def releaseDueSessions(self, now: datetime):
-        """Process end events only """
         nowTs = now.timestamp()
         
         sessions_to_release = []

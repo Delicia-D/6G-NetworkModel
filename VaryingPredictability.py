@@ -20,7 +20,6 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         print(f" Simulation {i+1}/{total_rates}: {arrival_rate} calls/second | Accuracy: {accuracy_label} (PID: {os.getpid()})")
         print(f"{'='*60}")
         
-        # Create new RNG for this process to avoid shared state issues
         _rng = np.random.default_rng(rng_seed)
         
         # Create simulator with current arrival rate
@@ -96,7 +95,7 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
 def run_parallel_arrival_rate_experiment(users, predictors_dict, base_rng):
     """Run simulations with different arrival rates and accuracy levels in parallel"""
     
-    # Define arrival rates to test (calls per second)
+    # Define arrival rates to test 
     arrival_rates = [0.6, 2, 4, 6, 8, 10]
     
     # Get number of CPU cores
@@ -124,7 +123,7 @@ def run_parallel_arrival_rate_experiment(users, predictors_dict, base_rng):
         predictor = predictor_info['predictor']
         r2_score = predictor_info['r2_score']
         
-        base_seed = 42  # Same seed for all accuracy levels for fair comparison
+        base_seed = 42  
         
         # Run parallel simulations for this accuracy level
         accuracy_results = Parallel(n_jobs=n_jobs, verbose=10)(
@@ -160,7 +159,7 @@ def generate_data_for_noise_level(noise_level, users, base_rng):
         end_dt=datetime(2025, 7, 30),
         rng=base_rng,
         calls_per_day_mean=400,
-        noise_level=noise_level,  # Set the specific noise level
+        noise_level=noise_level,  
     )
 
     rows = sim.run()
@@ -168,7 +167,6 @@ def generate_data_for_noise_level(noise_level, users, base_rng):
     
     print(f"  Data generated with {noise_level*100}% noise: {len(df):,} calls")
     
-    # Train predictor on this noise level data
     predictor = CallDurationPredictor()
     predictor.train(df, verbose=False)
     
@@ -225,9 +223,9 @@ if __name__ == "__main__":
 
     # Define noise levels to test
     noise_levels = {
-        'Low_Noise': 0.02,    # 5% noise - should give high accuracy
-        'Medium_Noise': 0.60, # 50% noise - should give medium accuracy
-        'High_Noise': 1    # 100% noise - should give low accuracy
+        'Low_Noise': 0.02,    
+        'Medium_Noise': 0.60, 
+        'High_Noise': 1    
     }
     
     predictors_dict = {}
@@ -264,7 +262,7 @@ if __name__ == "__main__":
         metrics = all_metrics[accuracy_label]
         print(f"{accuracy_label:16}: R² = {metrics['r2']:.4f} ({metrics['r2']*100:.1f}%) | RMSE = {metrics['rmse']:.2f}s | Noise = {predictor_info['noise_level']*100:.0f}%")
     
-    # NOW run the parallel experiment with all accuracy levels
+    # Run the parallel experiment with all accuracy levels
     print("\n" + "="*70)
     print("STARTING PARALLEL ARRIVAL RATE EXPERIMENT ACROSS ACCURACY LEVELS")
     print("="*70)
@@ -286,7 +284,7 @@ if __name__ == "__main__":
     print("FINAL EXPERIMENT SUMMARY ACROSS ACCURACY LEVELS")
     print(f"{'='*70}")
     
-    # Group results by accuracy level for better readability
+    # Group results by accuracy level 
     results_by_accuracy = {}
     for result in results:
         accuracy_label = result['accuracy_label']

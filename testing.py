@@ -35,15 +35,13 @@ for i in range(1, N+1):
             score = _rng.gamma(gamma_shape, gamma_scale)
             
             # Cap at maximum and ensure minimum
-            score = min(score, 20)  # Cap at maximum relationship score
-            score = max(score, 1)  # Ensure minimum relationship
+            score = min(score, 20)  
+            score = max(score, 1)  
             score=round(score)
             
             users[i].addRelationship(j, score)
             users[j].addRelationship(i, score)
 
-# 
-# Analyze relationship distribution
 # Analyze relationship distribution
 all_scores = []
 all_calc_scores = []  # For the calculation-scale scores
@@ -52,9 +50,8 @@ for user in users.values():
     # Get the calculation-scale scores too
     for other_id in user.relationships:
         all_calc_scores.append(user.getRelationshipScore(other_id))
-# PLOT 1: Original relationship scores (1-20 scale)
-plt.figure(figsize=(12, 5))
 
+plt.figure(figsize=(12, 5))
 plt.subplot(1, 2, 1)
 plt.hist(all_scores, bins=20, alpha=0.7, edgecolor='black', color='blue', range=(1, 20))
 plt.xlabel('Relationship Score (1-20 scale)')

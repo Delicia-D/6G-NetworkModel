@@ -16,6 +16,12 @@ class CoverageClassifier:
         self.group_config = group_config
         self.rng = rng if rng is not None else np.random.default_rng(42)
         # RAT coverage boxes coordinates
+        self.group_definitions = {
+            'Group A': ['RAT-1', 'RAT-4', 'RAT-5'],
+            'Group B': ['RAT-1', 'RAT-4', 'RAT-2'], 
+            'Group D': ['RAT-1', 'RAT-3','RAT-4'],
+            'Group C': ['RAT-1', 'RAT-4'],
+        }
         self.rat_coverage = {
             'RAT-1': {'lat_min': 24.0, 'lat_max': 25.0, 'lon_min': 25.0, 'lon_max': 26},
             'RAT-4': {'lat_min': 24.0, 'lat_max': 25.0, 'lon_min': 25.0, 'lon_max': 26},
@@ -24,22 +30,27 @@ class CoverageClassifier:
             'RAT-2': {'lat_min': 24.0, 'lat_max': 25.0, 'lon_min': 25.3, 'lon_max': 25.6}
         }
         
-        # Group definitions from your table
+        # Group definitions from table
+        
+        
+        
+        self.lat_bounds=(24.0,25.0)
+        # Longitude bounds
+        self.lon_bounds = (25.0, 26.0)
+        
+
+
+
+
+        self._current_group_index = 0
+        
+        self._group_sequence = []
         self.group_definitions = {
             'Group A': ['RAT-1', 'RAT-4', 'RAT-5'],
             'Group B': ['RAT-1', 'RAT-4', 'RAT-2'], 
             'Group D': ['RAT-1', 'RAT-3'],
             'Group C': ['RAT-1', 'RAT-4'],
         }
-        
-        self.lat_bounds=(24.0,25.0)
-        # Longitude bounds (uniform)
-        self.lon_bounds = (25.0, 26.0)
-        
-        # For group assignment mode
-        self._current_group_index = 0
-        self._group_sequence = []
-        
         if self.mode == "group_assignment" and self.group_config:
             self._setup_group_sequence()
 
@@ -47,7 +58,7 @@ class CoverageClassifier:
         """Setup group sequence for round-robin assignment"""
         self._group_sequence = []
         for group, percentage in self.group_config.items():
-            count = int(percentage * 100)  # For 100 users
+            count = int(percentage * 100)  
             self._group_sequence.extend([group] * count)
         
         # Shuffle to avoid patterns
@@ -92,19 +103,14 @@ class CoverageClassifier:
     def _generate_prioritized_coordinates(self) -> Tuple[float, float]:
         """Generate coordinates using gamma distribution for latitude prioritization"""
         
-        # Gamma distribution parameters for right-skewed (more users in higher latitudes)
-        shape = 0.7    # Right-skewed: more values on left, tail to right
+        # Gamma distribution parameters for right-skewed 
+        shape = 0.7    
         scale = 2.5
         
-        # Generate gamma value and map to latitude range [23.0, 27.6]
+        # Generate gamma value and map to latitude range 
         gamma_val = self.rng.gamma(shape, scale)
         
-        # Map gamma distribution to latitude (right-skewed = more high latitudes)
-        # Gamma values typically range 0-10, map inversely so lower gamma = higher latitude
-        #lat = 27.6 - (gamma_val * 0.46)  # 27.6 - (0 to 4.6) = 23.0 to 27.6
-        
         # Ensure within bounds
-        #lat = max(23.0, min(27.6, lat))
         lat = self.rng.uniform(*self.lat_bounds)
         lon = self.rng.uniform(*self.lon_bounds)
         
@@ -155,56 +161,49 @@ class CoverageClassifier:
             if actual_group == group:
                 return lat, lon
         
-        # If couldn't find after max attempts, force coordinates
         return self.make_coordinatesForGroup(group)
 
     def make_coordinatesForGroup(self, group: str) -> Tuple[float, float]:
         """
         Return lat, lon that produce the intended RAT-set given:
-        RAT-1: lat 23.0–27.6, lon 25.0–35.0
-        RAT-4: lat 23.0–27.6, lon 25.0–35.0   (same span as RAT-1)
-        RAT-3: lat 23.0–27.6, lon 32.0–35.0
-        RAT-5: lat 23.0–27.6, lon 25.0–27.5
-        RAT-2: lat 23.0–27.6, lon 28.0–31.0
+        RAT-1: lat 23.0-27.6, lon 25.0-35.0
+        RAT-4: lat 23.0-27.6, lon 25.0-35.0   (same span as RAT-1)
+        RAT-3: lat 23.0-27.6, lon 32.0-35.0
+        RAT-5: lat 23.0-27.6, lon 25.0-27.5
+        RAT-2: lat 23.0-27.6, lon 28.0-31.0
         """
         
-        # Gamma distribution parameters for right-skewed (more users in higher latitudes)
-        shape = 0.7    # Right-skewed: more values on left, tail to right
+        # Gamma distribution parameters for right-skewed 
+        shape = 0.7    
         scale = 2.5
         
-        # Generate gamma value and map to latitude range [23.0, 27.6]
+        # Generate gamma value and map to latitude range 
         gamma_val = self.rng.gamma(shape, scale)
      
         lat = self.rng.uniform(*self.lat_bounds)
         # Ensure within bounds
-        #lat = max(23.0, min(27.6, lat))
 
         if group == 'Group A':
-            # A = {RAT-1, RAT-4, RAT-5}  → choose inside RAT-5 (and thus RAT-4), but outside RAT-2 and RAT-3
-            lon = float(self.rng.uniform(25.0, 25.25))  # excludes RAT-2 (28–31) and RAT-3 (32–35)
+            # A = {RAT-1, RAT-4, RAT-5} 
+            lon = float(self.rng.uniform(25.0, 25.25))  
             return lat, lon
 
         elif group == 'Group B':
-            # B = {RAT-1, RAT-4, RAT-2} → choose inside RAT-2 (and thus RAT-4), but outside RAT-5 and RAT-3
-            lon = float(self.rng.uniform(25.3,25.6))  # excludes RAT-5 (≤27.5) and RAT-3 (32–35)
+            # B = {RAT-1, RAT-4, RAT-2} 
+            lon = float(self.rng.uniform(25.3,25.6))  
             return lat, lon
 
         elif group == 'Group C':
-            # C = {RAT-1, RAT-4} → inside RAT-4, but outside RAT-2, RAT-5, and RAT-3
-            # Valid gaps in lon that avoid others: (27.5, 28.0) or (31.0, 32.0)
+            # C = {RAT-1, RAT-4} 
             if self.rng.random() < 0.6:
-                lon = float(self.rng.uniform(25.6,25.7))  # safely between RAT-5 and RAT-2
+                lon = float(self.rng.uniform(25.6,25.7))  
             else:
-                lon = float(self.rng.uniform(25.25,25.3))  # between RAT-2 and RAT-3
+                lon = float(self.rng.uniform(25.25,25.3))  
             return lat, lon
 
         elif group == 'Group D':
-      
             lon = float(self.rng.uniform(25.7,26))
             return lat, lon
-            # If you prefer strict behavior, replace the two lines above with:
-            # raise ValueError("Group D exact set {RAT-1,RAT-3} is impossible because RAT-4 covers 25–35 in lon.")
-
+            
         else:
-            # Fallback to prioritized/random coordinates
             return self._generate_prioritized_coordinates()
