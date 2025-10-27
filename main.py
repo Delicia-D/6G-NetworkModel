@@ -181,7 +181,7 @@ if __name__ == "__main__":
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
     # Save the trained model
-    with open('trained_predictor1.pkl', 'wb') as f:
+    with open('trained_predictor.pkl', 'wb') as f:
         pickle.dump(predictor, f)
 
     # Save the metrics
@@ -189,7 +189,7 @@ if __name__ == "__main__":
         'train_metrics': train_metrics,
         'test_metrics': test_metrics
     }
-    with open('training_metrics1.json', 'w') as f:
+    with open('training_metrics.json', 'w') as f:
         json.dump(metrics, f)
 
     # run the parallel experiment

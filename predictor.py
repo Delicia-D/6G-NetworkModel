@@ -252,7 +252,7 @@ class PredictiveCallAdmissionController:
                 #if float(callCtx["actual_duration_sec"]) > float(callCtx["visibility_sec"]):
                 self.metrics.handoffs += 1
                 return "Admitted: RAT-1 fallback (A/B/C/D)"
-
+              #
             # Single block count for groups A/B/C
             self.metrics.blocked += 1
             self.metrics.blockedReason[f"Group {group} - terrestrial unavailable"] += 1
