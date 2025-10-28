@@ -18,29 +18,32 @@ pip install numpy pandas matplotlib seaborn scipy scikit-learn joblib jupyter
 ````
 
 ### Running the Main Simulation  
+Longest simulation takes almost an hour to run with some shorter than that.
+You can run the main simulation in two ways:
 
-Execute the main simulation script:
+1. Open a terminal in the project folder and type:
+   `python Testmain.py`
+2. Or, open the file **Testmain.py** in your IDE (VS Code ) and click the **Run** button.
 
-```bash
-python Testmain.py
-```
+This runs the full system with default settings and saves the results in the **outputs** folder.
+
+Each test script can be executed directly from the repository root.  
+Results are automatically stored in the **outputs/** folder as `.pkl`, `.json`, or `.csv` files.  
+You can also open each script manually in your IDE ( VS Code) and click **Run**.
+
+| Script                         | What It Tests                                      | How to Run                                                        | Output File                                                          |
+| ------------------------------ | -------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `Testmain.py`                  | End-to-end main simulation using default settings  | `python Testmain.py`  or  open **Testmain.py** and click **Run**  | `outputs/arrival_rate_resultsmainupdated.pkl`                       |
+| `Testservicetypes.py`          | Voice vs. video service impact                     | `python Testservicetypes.py`  or  open **Testservicetypes.py** and click **Run** | `outputs/service_type_different_rates_results1.pkl`                 |
+| `TestvaryingDuration.py`       | Effect of different call-duration distributions    | `python TestvaryingDuration.py`  or  open **TestvaryingDuration.py** and click **Run** | `outputs/varyingduration2.pkl`                                      |
+| `Testvaryinggroups.py`         | Effect of coverage groups on performance           | `python Testvaryinggroups.py`  or  open **Testvaryinggroups.py** and click **Run** | `outputs/arrival_rate_results_multiple_groupsvary1.pkl`             |
+| `Testvaryingheight.py`         | Effect of satellite altitude and visibility time   | `python Testvaryingheight.py`  or  open **Testvaryingheight.py** and click **Run** | `outputs/satellite_height_results2.pkl`                             |
+| `TestVaryingPredictability.py` | Impact of predictor accuracy on CAC decisions      | `python TestVaryingPredictability.py`  or  open **TestVaryingPredictability.py** and click **Run** | `outputs/arrival_rate_results_multiaccuracy_20251021_234346.pkl`   |
 
 ---
 
-## Test Suite
-##Output files are in .pkl file and some in json and some in csv files under output folder
-##notebook.ipynb is used for visualization by reading from these files
-
-Run each test directly from the repository root:
-
-| Script                         | What it tests                                   | Run Command                           | Output Files                                                          |
-| ------------------------------ | ----------------------------------------------- | ------------------------------------- | --------------------------------------------------------------------- |
-| `Testmain.py`                  | End-to-end main simulation (default settings)   | `python Testmain.py`                  | `outputs/arrival_rate_resultsmainupdated.pkl`                         |
-| `Testservicetypes.py`          | Voice vs. video  / service  impact   | `python Testservicetypes.py`          | `outputs/service_type_different_rates_results1.pkl`                   |
-| `TestvaryingDuration.py`       | Effect of different call duration distributions | `python TestvaryingDuration.py`       | `outputs/varyingduration2.pkl`                                        |
-| `Testvaryinggroups.py`         | Coverage groups impact                 | `python Testvaryinggroups.py`         | `outputs/arrival_rate_results_multiple_groupsvary1.pkl`               |
-| `Testvaryingheight.py`         | Satellite altitude / visibility sensitivity     | `python Testvaryingheight.py`         | `outputs/satellite_height_results2.pkl`                               |
-| `TestVaryingPredictability.py` | Impact of predictor accuracy on CAC decisions   | `python TestVaryingPredictability.py` | `outputs/arrival_rate_results_multiaccuracy_20251021_234346.pkl` |
+The Jupyter notebook **notebook.ipynb** is  used to visualize and compare results from these simulations.  
+It already contains plots from previous runs stored in the **outputs/** folder.
 
 
 ## Output Structure
