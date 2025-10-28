@@ -41,7 +41,7 @@ Run each test directly from the repository root:
 | `Testvaryingheight.py`         | Satellite altitude / visibility sensitivity     | `python Testvaryingheight.py`         | `outputs/satellite_height_results2.pkl`                               |
 | `TestVaryingPredictability.py` | Impact of predictor accuracy on CAC decisions   | `python TestVaryingPredictability.py` | `outputs/arrival_rate_results_multiaccuracy_20251021_234346.pkl` |
 
-use notebook.ipynb for visualization
+##use notebook.ipynb for visualization
 ## Output Structure
 
 All simulation outputs are saved in the `outputs/` folder.
