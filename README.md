@@ -1,9 +1,9 @@
-Here’s a clean, **emoji-free**, Markdown version you can paste directly into your `README.md` — properly formatted for GitHub:
+
 
 ````markdown
 # 6G Network Model — Call Admission Control Simulation
 
-This project simulates **Call Admission Control (CAC)** in satellite communication networks, comparing **predictive algorithms** against traditional **non-predictive approaches** across multiple experimental scenarios. These include service types, satellite heights, call duration distributions, coverage groups, and prediction accuracy levels.
+This project simulates **Call Admission Control (CAC)** in satellite communication networks, comparing **predictive algorithms** against traditional **non-predictive approaches** . The different simulation scenrios are include service types, satellite heights, call duration distributions, coverage groups, and prediction accuracy levels.
 
 ---
 
@@ -28,8 +28,8 @@ python Testmain.py
 
 ---
 
+## use notebook.ipynb for visualization
 ## Test Suite
-
 Run each test directly from the repository root:
 
 | Script                         | What it tests                                   | Run Command                           | Output Files                                                          |
@@ -41,7 +41,7 @@ Run each test directly from the repository root:
 | `Testvaryingheight.py`         | Satellite altitude / visibility sensitivity     | `python Testvaryingheight.py`         | `outputs/satellite_height_results2.pkl`                               |
 | `TestVaryingPredictability.py` | Impact of predictor accuracy on CAC decisions   | `python TestVaryingPredictability.py` | `outputs/arrival_rate_results_multiaccuracy_20251021_234346.pkl` |
 
-##use notebook.ipynb for visualization
+
 ## Output Structure
 
 All simulation outputs are saved in the `outputs/` folder.
