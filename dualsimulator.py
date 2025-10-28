@@ -473,17 +473,7 @@ class DualCallSimulator:
 
     def _print_comparative_results(self, predictive_controller, nonpredictive_controller, total_calls):
         """Print side-by-side comparison with new handoff metrics"""
-        print(f"\n{'RAT UTILIZATION':<25} {'PREDICTIVE':<15} {'NON-PREDICTIVE':<15}")
-        print(f"{'-'*55}")
-        
-        # Get the snapshots
-        predictive_snapshot = predictive_controller.getRATSnapshot()
-        nonpredictive_snapshot = nonpredictive_controller.getRATSnapshot()
-        
-        for rat in RAT_CAPACITIES.keys():
-            pred_use, pred_cap = predictive_snapshot.get(rat, (0, 0))
-            nonpred_use, nonpred_cap = nonpredictive_snapshot.get(rat, (0, 0))
-            print(f"{rat:<25} {pred_use}/{pred_cap}{'':<7} {nonpred_use}/{nonpred_cap}{'':<7}")
+    
         
         predictive_metrics = predictive_controller.getMetrics()
         nonpredictive_metrics = nonpredictive_controller.getMetrics()
