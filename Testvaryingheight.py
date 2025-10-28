@@ -134,14 +134,16 @@ def run_height_experiment(users, predictor, base_rng):
     
     return all_results
 
-def save_raw_results(results):
+def save_raw_results(results, outputs_folder):
     """Simply save the raw results without any calculations"""
     
-    # Save detailed results
-    with open('satellite_height_results2.pkl', 'wb') as f:
+    # Save detailed results to outputs folder
+    results_file_path = os.path.join(outputs_folder, 'satellite_height_results2.pkl')
+    with open(results_file_path, 'wb') as f:
         pickle.dump(results, f)
     
-    return df
+    print(f"Results saved to: {results_file_path}")
+    return results_file_path
 
 def print_detailed_results(results):
     """Print all results in a detailed table"""
@@ -173,6 +175,12 @@ if __name__ == "__main__":
     print("SATELLITE HEIGHT COMPARISON EXPERIMENT")
     print("=" * 70)
     
+    # Create outputs folder if it doesn't exist
+    outputs_folder = 'outputs'
+    if not os.path.exists(outputs_folder):
+        os.makedirs(outputs_folder)
+        print(f"Created outputs folder: {outputs_folder}")
+    
     # Load or create users
     N = 100
     users = {i: User(i) for i in range(1, N+1)}
@@ -192,7 +200,7 @@ if __name__ == "__main__":
                 users[i].addRelationship(j, score)
                 users[j].addRelationship(i, score)
 
-    # Generate training data
+    # Generate training data and save to outputs folder
     sim = CallSimulator(
         users=users,
         start_dt=datetime(2025, 1, 1),
@@ -203,18 +211,22 @@ if __name__ == "__main__":
     )
     rows = sim.run()
     df = pd.DataFrame(rows)
-    df.to_csv("data.csv", index=False)
+    data_file_path = os.path.join(outputs_folder, "data.csv")
+    df.to_csv(data_file_path, index=False)
     print(f"Training data generated: {len(df):,} calls")
+    print(f"Data saved to: {data_file_path}")
 
     # Load and train predictor
     predictor = CallDurationPredictor()
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv(data_file_path)
     predictor.train(df, verbose=True)
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
-    # Save model
-    with open('trained_predictor.pkl', 'wb') as f:
+    # Save model to outputs folder
+    model_file_path = os.path.join(outputs_folder, 'trained_predictor.pkl')
+    with open(model_file_path, 'wb') as f:
         pickle.dump(predictor, f)
+    print(f"Model saved to: {model_file_path}")
 
     # Run height experiment
     print("\n" + "="*70)
@@ -224,7 +236,7 @@ if __name__ == "__main__":
     results = run_height_experiment(users, predictor, _rng)
     
     # Save and display results 
-    df_results = save_raw_results(results)
+    results_file_path = save_raw_results(results, outputs_folder)
     print_detailed_results(results)
     
     # Simple final message
@@ -233,4 +245,8 @@ if __name__ == "__main__":
     print(f"{'='*70}")
     print(f"Total scenarios simulated: {len([r for r in results if 'error' not in r])}")
     print(f"Results saved to:")
+    print(f"  - {data_file_path}")
+    print(f"  - {model_file_path}")
+    print(f"  - {results_file_path}")
+    print(f"All files saved in '{outputs_folder}' folder")
     print(f"{'='*70}")

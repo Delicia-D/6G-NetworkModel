@@ -312,8 +312,7 @@ class CallSimulator:
         day = self.start_dt
 
         print(" Generating data")
-        print(f"Gamma distribution: shape={self.gamma_shape}, scale={self.gamma_scale}")
-        print(f"Noise level: {self.noise_level*100:.1f}%")
+
 
         while day.date() <= self.end_dt.date():
             # Deterministic daily call count

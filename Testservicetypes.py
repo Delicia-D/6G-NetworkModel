@@ -196,6 +196,12 @@ def run_mixed_service_experiment(users, predictor, base_rng):
 if __name__ == "__main__":
     print("=" * 70)
     
+    # Create outputs folder if it doesn't exist
+    outputs_folder = 'outputs'
+    if not os.path.exists(outputs_folder):
+        os.makedirs(outputs_folder)
+        print(f"Created outputs folder: {outputs_folder}")
+    
     # Create users with gamma-distributed relationships
     N = 100
     users = {i: User(i) for i in range(1, N+1)}
@@ -230,16 +236,18 @@ if __name__ == "__main__":
 
     rows = sim.run()
 
-    # Create and save DataFrame
+    # Create and save DataFrame to outputs folder
     df = pd.DataFrame(rows)
-    df.to_csv("data.csv", index=False)
+    data_file_path = os.path.join(outputs_folder, "data.csv")
+    df.to_csv(data_file_path, index=False)
 
     print(f"\n GAMMA-RELATIONSHIP DATA GENERATED!")
     print(f"Total calls: {len(df):,}")
+    print(f"Data saved to: {data_file_path}")
     
     # Load data and train predictor
     predictor = CallDurationPredictor()
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv(data_file_path)
     
     # Train the model  
     predictor.train(df, verbose=True)
@@ -247,16 +255,18 @@ if __name__ == "__main__":
     # Evaluate the model 
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
-    # Save the trained model
-    with open('trained_predictor.pkl', 'wb') as f:
+    # Save the trained model to outputs folder
+    model_file_path = os.path.join(outputs_folder, 'trained_predictor.pkl')
+    with open(model_file_path, 'wb') as f:
         pickle.dump(predictor, f)
 
-    # Save the metrics
+    # Save the metrics to outputs folder
+    metrics_file_path = os.path.join(outputs_folder, 'training_metrics.json')
     metrics = {
         'train_metrics': train_metrics,
         'test_metrics': test_metrics
     }
-    with open('training_metrics.json', 'w') as f:
+    with open(metrics_file_path, 'w') as f:
         json.dump(metrics, f)
 
     # run the service type experiments with different arrival rates
@@ -267,11 +277,14 @@ if __name__ == "__main__":
     
     results = run_service_type_different_rates(users, predictor, _rng)
     
-    # Save results for Jupyter plotting
-    with open('service_type_different_rates_results1.pkl', 'wb') as f:
+    # Save results to outputs folder for Jupyter plotting
+    results_file_path = os.path.join(outputs_folder, 'service_type_different_rates_results1.pkl')
+    with open(results_file_path, 'wb') as f:
         pickle.dump(results, f)
     
-    '''with open('service_type_different_rates_results1.json', 'w') as f:
+    '''# Optional: Save as JSON as well
+    json_results_file_path = os.path.join(outputs_folder, 'service_type_different_rates_results1.json')
+    with open(json_results_file_path, 'w') as f:
         json.dump(results, f, indent=2)'''
     
     # Print final summary by service type
@@ -318,4 +331,9 @@ if __name__ == "__main__":
     else:
         print(f"  No results for voice")
     
-    print(f"\nResults saved to 'service_type_different_rates_results.pkl' for Jupyter plotting")
+    print(f"\nResults saved to '{results_file_path}' for Jupyter plotting")
+    print(f"All files saved in '{outputs_folder}' folder:")
+    print(f"  - {data_file_path}")
+    print(f"  - {model_file_path}")
+    print(f"  - {metrics_file_path}")
+    print(f"  - {results_file_path}")

@@ -178,6 +178,12 @@ def run_parallel_scenario_experiment(users, predictor, base_rng, scenario_name, 
 if __name__ == "__main__":
     print("=" * 70)
     
+    # Create outputs folder if it doesn't exist
+    outputs_folder = 'outputs'
+    if not os.path.exists(outputs_folder):
+        os.makedirs(outputs_folder)
+        print(f"Created outputs folder: {outputs_folder}")
+    
     # Create users with normal-distributed relationships
     N = 100
     users = {i: User(i) for i in range(1, N+1)}
@@ -213,16 +219,18 @@ if __name__ == "__main__":
 
     rows = sim.run()
 
-    # Create and save DataFrame
+    # Create and save DataFrame to outputs folder
     df = pd.DataFrame(rows)
-    df.to_csv("data.csv", index=False)
+    data_file_path = os.path.join(outputs_folder, "data.csv")
+    df.to_csv(data_file_path, index=False)
 
     print(f"\n  DATA GENERATED!")
     print(f"Total calls: {len(df):,}")
+    print(f"Data saved to: {data_file_path}")
     
     # Load data and train predictor
     predictor = CallDurationPredictor()
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv(data_file_path)
     
     # Train the model 
     predictor.train(df, verbose=True)
@@ -230,16 +238,18 @@ if __name__ == "__main__":
     # Evaluate the model 
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
-    # Save the trained model
-    with open('trained_predictor.pkl', 'wb') as f:
+    # Save the trained model to outputs folder
+    model_file_path = os.path.join(outputs_folder, 'trained_predictor.pkl')
+    with open(model_file_path, 'wb') as f:
         pickle.dump(predictor, f)
 
-    # Save the metrics
+    # Save the metrics to outputs folder
+    metrics_file_path = os.path.join(outputs_folder, 'training_metrics.json')
     metrics = {
         'train_metrics': train_metrics,
         'test_metrics': test_metrics
     }
-    with open('training_metrics.json', 'w') as f:
+    with open(metrics_file_path, 'w') as f:
         json.dump(metrics, f)
 
     # Define scenarios
@@ -275,16 +285,11 @@ if __name__ == "__main__":
         
         all_results[scenario['name']] = results
     
-    # Save combined results
-    with open('varyingduration2.pkl', 'wb') as f:
+    # Save combined results to outputs folder
+    results_pkl_path = os.path.join(outputs_folder, 'varyingduration2.pkl')
+    with open(results_pkl_path, 'wb') as f:
         pickle.dump(all_results, f)
-    
-    with open('varyingduration2.json', 'w') as f:
-        # Convert datetime objects to strings for JSON serialization
-        json_results = {}
-        for scenario_name, results in all_results.items():
-            json_results[scenario_name] = results
-        json.dump(json_results, f, indent=2, default=str)
+
     
     # Print final summary
     print(f"\n{'='*80}")
@@ -321,8 +326,14 @@ if __name__ == "__main__":
             print(f"{scenario_name:<30}: Mean={avg_mean:.1f}s | Median={avg_median:.1f}s | Q75={avg_q75:.1f}s | "
                   f"Blocking: {avg_blocking_p:.3f} | Handoff: {avg_handoff_p:.3f}")
     
-    print(f"\nResults saved to 'varyingduration2.pkl' and 'varyingduration2.json'")
+
     print(f"Files contain all probabilities and duration statistics (including quartiles) for both scenarios!")
+    print(f"All files saved in '{outputs_folder}' folder:")
+    print(f"  - {data_file_path}")
+    print(f"  - {model_file_path}")
+    print(f"  - {metrics_file_path}")
+    print(f"  - {results_pkl_path}")
+  
     print(f"Scenarios completed:")
     for scenario in scenarios:
         duration = (scenario['end_dt'] - scenario['start_dt']).total_seconds() / 3600

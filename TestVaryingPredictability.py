@@ -149,7 +149,7 @@ def run_parallel_arrival_rate_experiment(users, predictors_dict, base_rng):
     
     return all_results
 
-def generate_data_for_noise_level(noise_level, users, base_rng):
+def generate_data_for_noise_level(noise_level, users, base_rng, outputs_folder):
     """Generate data and train predictor for a specific noise level"""
     print(f"\nGenerating data with {noise_level*100}% noise...")
     
@@ -198,6 +198,12 @@ def generate_data_for_noise_level(noise_level, users, base_rng):
 if __name__ == "__main__":
     print("=" * 70)
     
+    # Create outputs folder if it doesn't exist
+    outputs_folder = 'outputs'
+    if not os.path.exists(outputs_folder):
+        os.makedirs(outputs_folder)
+        print(f"Created outputs folder: {outputs_folder}")
+    
     # Create users with normal-distributed relationships
     N = 100
     users = {i: User(i) for i in range(1, N+1)}
@@ -233,7 +239,7 @@ if __name__ == "__main__":
     
     # Generate data and train predictors for each noise level
     for noise_label, noise_value in noise_levels.items():
-        result = generate_data_for_noise_level(noise_value, users, _rng)
+        result = generate_data_for_noise_level(noise_value, users, _rng, outputs_folder)
         
         # Use the accuracy label from the training results
         accuracy_label = result['accuracy_label']
@@ -245,13 +251,17 @@ if __name__ == "__main__":
         }
         all_metrics[accuracy_label] = result['test_metrics']
         
-        # Save individual datasets and models
-        result['data'].to_csv(f"call_data_{accuracy_label.replace(' ', '_')}.csv", index=False)
-        with open(f'trained_predictor_{accuracy_label.replace(' ', '_')}.pkl', 'wb') as f:
+        # Save individual datasets and models to outputs folder
+        data_file_path = os.path.join(outputs_folder, f"call_data_{accuracy_label.replace(' ', '_')}.csv")
+        result['data'].to_csv(data_file_path, index=False)
+        
+        model_file_path = os.path.join(outputs_folder, f'trained_predictor_{accuracy_label.replace(' ', '_')}.pkl')
+        with open(model_file_path, 'wb') as f:
             pickle.dump(result['predictor'], f)
     
-    # Save all metrics
-    with open('all_accuracy_levels_metrics.json', 'w') as f:
+    # Save all metrics to outputs folder
+    metrics_file_path = os.path.join(outputs_folder, 'all_accuracy_levels_metrics.json')
+    with open(metrics_file_path, 'w') as f:
         json.dump(all_metrics, f, indent=2)
     
     # Print summary of all models
@@ -269,15 +279,12 @@ if __name__ == "__main__":
     
     results = run_parallel_arrival_rate_experiment(users, predictors_dict, _rng)
     
-    # Save results for Jupyter plotting
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_filename = f'arrival_rate_results_multiaccuracy_{timestamp}.pkl'
+    # Save results to outputs folder for Jupyter plotting
+    results_filename = 'arrival_rate_results_multiaccuracy_20251021_234346.pkl'
+    results_file_path = os.path.join(outputs_folder, results_filename)
     
-    with open(results_filename, 'wb') as f:
+    with open(results_file_path, 'wb') as f:
         pickle.dump(results, f)
-    
-    with open(f'arrival_rate_results_multiaccuracy_{timestamp}.json', 'w') as f:
-        json.dump(results, f, indent=2)
     
     # Print final summary
     print(f"\n{'='*70}")
@@ -304,5 +311,9 @@ if __name__ == "__main__":
             else:
                 print(f"  Rate {result['arrival_rate_per_second']}/s: ERROR - {result['error']}")
     
-    print(f"\nResults saved to '{results_filename}' for Jupyter plotting")
-    print(f"Individual models saved as 'trained_predictor_<accuracy_level>.pkl'")
+    print(f"\nResults saved to '{results_file_path}' for Jupyter plotting")
+    print(f"All files saved in '{outputs_folder}' folder:")
+    print(f"  - Individual datasets: call_data_<accuracy_level>.csv")
+    print(f"  - Individual models: trained_predictor_<accuracy_level>.pkl")
+    print(f"  - All metrics: {metrics_file_path}")
+    print(f"  - Main results: {results_file_path}")

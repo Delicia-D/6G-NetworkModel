@@ -26,7 +26,7 @@ def run_single_simulation(arrival_rate, i, total_rates, users, predictor, rng_se
         # Create simulator with current arrival rate
         classifier = CoverageClassifier(mode="real_simulation", rng=_rng)
 
-        # Create and run dual simulator
+        # Create and run
         sim = DualCallSimulator(
             users=users,
             start_dt=datetime(2025, 8, 9,0, 0, 0),
@@ -129,6 +129,12 @@ def run_parallel_arrival_rate_experiment(users, predictor, base_rng):
 if __name__ == "__main__":
     print("=" * 70)
     
+    # Create outputs folder if it doesn't exist
+    outputs_folder = 'outputs'
+    if not os.path.exists(outputs_folder):
+        os.makedirs(outputs_folder)
+        print(f"Created outputs folder: {outputs_folder}")
+    
     # Create users with normal-distributed relationships
     N = 100
     users = {i: User(i) for i in range(1, N+1)}
@@ -163,16 +169,18 @@ if __name__ == "__main__":
 
     rows = sim.run()
 
-    # Create and save DataFrame
+    # Create and save DataFrame to outputs folder
     df = pd.DataFrame(rows)
-    df.to_csv("data.csv", index=False)
+    data_file_path = os.path.join(outputs_folder, "data.csv")
+    df.to_csv(data_file_path, index=False)
 
     print(f"\n  DATA GENERATED!")
     print(f"Total calls: {len(df):,}")
+    print(f"Data saved to: {data_file_path}")
     
     # Load data and train predictor
     predictor = CallDurationPredictor()
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv(data_file_path)
     
     # Train the model
     predictor.train(df, verbose=True)
@@ -180,17 +188,10 @@ if __name__ == "__main__":
     # Evaluate the model 
     train_metrics, test_metrics = predictor.evaluate(verbose=True)
 
-    # Save the trained model
-    with open('trained_predictor.pkl', 'wb') as f:
+    # Save the trained model to outputs folder
+    model_file_path = os.path.join(outputs_folder, 'trained_predictor.pkl')
+    with open(model_file_path, 'wb') as f:
         pickle.dump(predictor, f)
-
-    # Save the metrics
-    metrics = {
-        'train_metrics': train_metrics,
-        'test_metrics': test_metrics
-    }
-    with open('training_metrics.json', 'w') as f:
-        json.dump(metrics, f)
 
     # run the parallel experiment
     print("\n" + "="*70)
@@ -199,11 +200,14 @@ if __name__ == "__main__":
     
     results = run_parallel_arrival_rate_experiment(users, predictor, _rng)
     
-    # Save results for Jupyter plotting
-    with open('arrival_rate_resultsmainupdated.pkl', 'wb') as f:
+    # Save results to outputs folder for Jupyter plotting
+    results_file_path = os.path.join(outputs_folder, 'arrival_rate_resultsmainupdated.pkl')
+    with open(results_file_path, 'wb') as f:
         pickle.dump(results, f)
     
-    '''with open('arrival_rate_resultsmain1.json', 'w') as f:
+    '''# Optional: Save as JSON as well
+    json_results_file_path = os.path.join(outputs_folder, 'arrival_rate_resultsmain1.json')
+    with open(json_results_file_path, 'w') as f:
         json.dump(results, f, indent=2)'''
     
     # Print final summary
@@ -221,4 +225,9 @@ if __name__ == "__main__":
         else:
             print(f"Rate {result['arrival_rate_per_second']}/s: ERROR - {result['error']}")
     
-    print(f"\nResults saved to 'arrival_rate_resultsmain.pkl' for Jupyter plotting")
+    print(f"\nResults saved to '{results_file_path}' for Jupyter plotting")
+    print(f"All files saved in '{outputs_folder}' folder:")
+    print(f"  - {data_file_path}")
+    print(f"  - {model_file_path}")
+
+    print(f"  - {results_file_path}")
