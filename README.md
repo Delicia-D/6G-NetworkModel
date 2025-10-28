@@ -1,14 +1,13 @@
 
-
 ````markdown
 # 6G Network Model — Call Admission Control Simulation
 
-This project simulates **Call Admission Control (CAC)** in satellite communication networks, comparing **predictive algorithms** against traditional **non-predictive approaches** . The different simulation scenrios are include service types, satellite heights, call duration distributions, coverage groups, and prediction accuracy levels.
+This project simulates **Call Admission Control (CAC)** in satellite communication networks, comparing **predictive algorithms** against traditional **non-predictive approaches** across multiple experimental scenarios. These include service types, satellite heights, call duration distributions, coverage groups, and prediction accuracy levels.
 
 ---
 
-## Quick Start
-
+## instructions to run
+Be inside Networkmodel directory to run the code/root directory
 ### Prerequisites
 - Python 3.8+
 
@@ -18,7 +17,7 @@ Install all dependencies using pip:
 pip install numpy pandas matplotlib seaborn scipy scikit-learn joblib jupyter
 ````
 
-### Running the Main Simulation
+### Running the Main Simulation  
 
 Execute the main simulation script:
 
@@ -28,8 +27,10 @@ python Testmain.py
 
 ---
 
-## use notebook.ipynb for visualization
 ## Test Suite
+##Output files are in .pkl file and some in json and some in csv files under output folder
+##notebook.ipynb is used for visualization by reading from these files
+
 Run each test directly from the repository root:
 
 | Script                         | What it tests                                   | Run Command                           | Output Files                                                          |
